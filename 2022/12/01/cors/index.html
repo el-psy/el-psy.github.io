@@ -1,0 +1,309 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>跨域资源共享 | 七翼式 | 不对称</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="theme-color" content="#3F51B5">
+  
+  
+  <meta name="keywords" content="前端,cors">
+  <meta name="description" content="#前言 首先，这篇是从跨源资源共享（CORS）中弄出来的。 说起来，MDN还真是强大呢。 跨域资源共享，或称为CORS，是一种浏览器安全机制，需要后端的配合。现在前后端分离的趋势下，加给一种前端的源和后端的源的限制，以达到安全的目的。具体上是，在后端中设置一些访问的限制，主要是访问的源的限制，也有其他的限制；浏览器端中如果发现请求不符合后端服务器的限制，则返回请求失败。 #同源的定义 如果两个 U">
+<meta property="og:type" content="article">
+<meta property="og:title" content="跨域资源共享">
+<meta property="og:url" content="http://localhost:5000/2022/12/01/cors/index.html">
+<meta property="og:site_name" content="七翼式">
+<meta property="og:description" content="#前言 首先，这篇是从跨源资源共享（CORS）中弄出来的。 说起来，MDN还真是强大呢。 跨域资源共享，或称为CORS，是一种浏览器安全机制，需要后端的配合。现在前后端分离的趋势下，加给一种前端的源和后端的源的限制，以达到安全的目的。具体上是，在后端中设置一些访问的限制，主要是访问的源的限制，也有其他的限制；浏览器端中如果发现请求不符合后端服务器的限制，则返回请求失败。 #同源的定义 如果两个 U">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-01T05:01:27.000Z">
+<meta property="article:modified_time" content="2022-12-01T06:15:20.000Z">
+<meta property="article:author" content="el_psy">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="cors">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternative" href="/atom.xml" title="七翼式" type="application/atom+xml">
+  
+  <meta name="summary" content="">
+  <link rel="shortcut icon" href="/favicon/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head>
+
+<body>
+  <div id="loading" class="active"></div>
+
+  <nav id="menu" class="hide" >
+   <div class="inner flex-row-vertical">
+  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+      <i class="icon icon-lg icon-close"></i>
+  </a>
+  <div class="brand-wrap">
+    <div class="brand">
+      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
+      <hgroup class="introduce">
+        <h5 class="nickname">el_psy</h5>
+        <a href="mailto:gaojingjingjing@outlook.com" title="gaojingjingjing@outlook.com" class="mail">gaojingjingjing@outlook.com</a>
+      </hgroup>
+    </div>
+  </div>
+  <div class="scroll-wrap flex-col">
+    <ul class="nav">
+      
+          <li class="waves-block waves-effect">
+            <a href="/"  >
+              <i class="icon icon-lg icon-home"></i>
+              主页
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/archives"  >
+              <i class="icon icon-lg icon-archives"></i>
+              archives
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/categories"  >
+              <i class="icon icon-lg icon-th-list"></i>
+              categories
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/tags"  >
+              <i class="icon icon-lg icon-tags"></i>
+              Tags
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="https://github.com/el-psy" target="_blank" >
+              <i class="icon icon-lg icon-github"></i>
+              Github
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/404"  >
+              <i class="icon icon-lg icon-link"></i>
+              测试
+            </a>
+          </li>
+      
+    </ul>
+
+    <footer class="footer">
+  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
+  <p>七翼式 &copy; 2022</p>
+  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
+  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
+</footer>
+
+  </div>
+</div>
+
+  </nav>
+  <main id="main">
+    <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">跨域资源共享</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header">
+  <div class="container">
+    <h1 class="author">跨域资源共享</h1>
+    <h5 class="subtitle">
+        
+            <time datetime="2022-12-01T05:01:27.000Z" itemprop="datePublished" class="page-time">
+  2022-12-01
+</time>
+
+
+        
+    </h5>
+  </div>
+</header>
+
+    <div class="container body-wrap">
+      <article id="post-cors" 
+  class="article article-type-post" itemprop="blogPost">
+    <div class="post-meta flex-row">
+        
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cors/" rel="tag">cors</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
+
+    </div>
+    <div class="post-body">
+        <aside class="post-widget" id="post-widget">
+
+            
+            <nav class="post-toc-wrap" id="post-toc">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E5%89%8D%E8%A8%80"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E5%90%8C%E6%BA%90%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="post-toc-number">2.</span> <span class="post-toc-text">同源的定义</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E9%9C%80%E8%A6%81cors"><span class="post-toc-number">3.</span> <span class="post-toc-text">什么情况下需要CORS</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E6%B5%81%E7%A8%8B"><span class="post-toc-number">4.</span> <span class="post-toc-text">流程</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82"><span class="post-toc-number">5.</span> <span class="post-toc-text">什么是简单请求</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%A4%B4%E9%83%A8"><span class="post-toc-number">6.</span> <span class="post-toc-text">需要注意的头部</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#fetch"><span class="post-toc-number">7.</span> <span class="post-toc-text">fetch</span></a></li></ol>
+            </nav>
+            
+        </aside>
+
+        <div class="post-main">
+
+            <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="前言"><a class="header-anchor" href="#前言">#</a>前言</h1>
+<p>首先，这篇是从<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS?qs=cors">跨源资源共享（CORS）</a>中弄出来的。<br>
+说起来，MDN还真是强大呢。<br>
+跨域资源共享，或称为CORS，是一种浏览器安全机制，需要后端的配合。现在前后端分离的趋势下，加给一种前端的源和后端的源的限制，以达到安全的目的。具体上是，在后端中设置一些访问的限制，主要是访问的源的限制，也有其他的限制；浏览器端中如果发现请求不符合后端服务器的限制，则返回请求失败。</p>
+<h1 id="同源的定义"><a class="header-anchor" href="#同源的定义">#</a>同源的定义</h1>
+<p>如果两个 URL 的 protocol、port (en-US) (如果有指定的话) 和 host 都相同的话，则这两个 URL 是同源。</p>
+<p>出自<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_policy">浏览器的同源策略</a></p>
+<h1 id="什么情况下需要cors"><a class="header-anchor" href="#什么情况下需要cors">#</a>什么情况下需要CORS</h1>
+<ul>
+<li>前文提到的由 XMLHttpRequest 或 Fetch API 发起的跨源 HTTP 请求。</li>
+<li>Web 字体（CSS 中通过 @font-face 使用跨源字体资源），因此，网站就可以发布 TrueType 字体资源，并只允许已授权网站进行跨站调用。</li>
+<li>WebGL 贴图。</li>
+<li>使用 drawImage() 将图片或视频画面绘制到 canvas。</li>
+<li>来自图像的 CSS 图形 (en-US)。</li>
+</ul>
+<p>出自<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS?qs=cors">跨源资源共享（CORS）</a></p>
+<h1 id="流程"><a class="header-anchor" href="#流程">#</a>流程</h1>
+<ol>
+<li>浏览器通过XHR或者Fetch等方式发起跨域资源请求。</li>
+<li>判断是否为简单请求</li>
+</ol>
+<p>3.1. 如果是简单请求</p>
+<blockquote>
+<p>直接向后端发起请求，通过返回的响应头判断请求是否符合CORS的安全策略</p>
+</blockquote>
+<p>3.2. 如果不是简单请求</p>
+<blockquote>
+<p>先发起预检请求，判断是否符合CORS的安全策略<br>
+如果符合安全策略，再发送实际的请求</p>
+</blockquote>
+<h1 id="什么是简单请求"><a class="header-anchor" href="#什么是简单请求">#</a>什么是简单请求</h1>
+<p>这实在是一个复杂的问题，估计在面试中把答案说出来，面试官也很少能弄清。<br>
+前3条还好，后两条比较难遇到。</p>
+<ol>
+<li>使用下列方法之一</li>
+</ol>
+<blockquote>
+<p>GET, HEAD, POST</p>
+</blockquote>
+<ol start="2">
+<li>除了被用户代理自动设置的首部字段，允许人为设置的字段为Fetch规范定义的对 CORS 安全的首部字段集合：</li>
+</ol>
+<blockquote>
+<p>Accept<br>
+Accept-Language<br>
+Content-Language<br>
+Content-Type（需要注意额外的限制）<br>
+Range（只允许简单的范围首部值 如 bytes=256- 或 bytes=127-255）</p>
+</blockquote>
+<ol start="3">
+<li>Content-Type 首部所指定的媒体类型的值仅限于下列三者之一：</li>
+</ol>
+<blockquote>
+<p>text/plain<br>
+multipart/form-data<br>
+application/x-www-form-urlencoded</p>
+</blockquote>
+<ol start="4">
+<li>如果请求是使用 XMLHttpRequest 对象发出的，在返回的 XMLHttpRequest.upload 对象属性上没有注册任何事件监听器；也就是说，给定一个 XMLHttpRequest 实例 xhr，没有调用 xhr.upload.addEventListener()，以监听该上传请求。</li>
+<li>请求中没有使用 ReadableStream 对象。</li>
+</ol>
+<h1 id="需要注意的头部"><a class="header-anchor" href="#需要注意的头部">#</a>需要注意的头部</h1>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Access-Control-Allow-Origin:</span> <span class="string">https://foo.example</span></span><br><span class="line"><span class="attr">Access-Control-Allow-Methods:</span> <span class="string">POST,</span> <span class="string">GET,</span> <span class="string">OPTIONS</span></span><br><span class="line"><span class="attr">Access-Control-Allow-Headers:</span> <span class="string">X-PINGOTHER,</span> <span class="string">Content-Type</span></span><br><span class="line"><span class="attr">Access-Control-Max-Age:</span> <span class="number">86400</span></span><br></pre></td></tr></table></figure>
+<p>。。应该能轻松看懂吧。<br>
+这是在后端服务器上设置的头部，在CORS请求中的响应头中返回的字段，用于CORS的安全策略。<br>
+包括设置了允许访问的源，允许访问的方式，请求头中允许设置的头部字段，预检请求可以缓存时间从长短（单位秒）。</p>
+<h1 id="fetch"><a class="header-anchor" href="#fetch">#</a>fetch</h1>
+<p>是的，fetch的访问也会受到cors的限制，与简单请求有一定的相关。可以多注意一下。</p>
+
+
+
+            </div>
+            
+<nav class="post-nav">
+  
+
+  
+    <div class="waves-block waves-effect next fr">
+      <a href="/2022/11/30/js-runtime/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">任务，微任务，事件循环以及js运行时理论篇</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+            
+            
+        </div>
+    </div>
+</article>
+
+    </div>
+  </main>
+<div class="mask" id="mask"></div>
+<a href="#top" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<script type="text/template" id="search-tpl">
+<li class="item">
+    <a href="/{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</script>
+
+
+<script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
