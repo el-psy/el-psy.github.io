@@ -1,0 +1,298 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>HTTP-身份认证 | 七翼式 | 不对称</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="theme-color" content="#3F51B5">
+  
+  
+  <meta name="keywords" content="前端,auth">
+  <meta name="description" content="#前言 token，又是前端八股常考且必考。但总是云里雾里。 这篇文章里也差不多。 没事可以多看看  HTTP 身份验证 Introduction to JSON Web Tokens OAuth 2.0  #总领 到底怎么认证一个用户？ 简答来说，就是在HTTP头部放一段密文，用于验证。 至于怎么放，放什么，五花八门。 #在MDN中 依据文章HTTP 身份验证 认证的流程基本就是，客户端请求，服">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP-身份认证">
+<meta property="og:url" content="http://localhost:5000/2022/12/03/auth/index.html">
+<meta property="og:site_name" content="七翼式">
+<meta property="og:description" content="#前言 token，又是前端八股常考且必考。但总是云里雾里。 这篇文章里也差不多。 没事可以多看看  HTTP 身份验证 Introduction to JSON Web Tokens OAuth 2.0  #总领 到底怎么认证一个用户？ 简答来说，就是在HTTP头部放一段密文，用于验证。 至于怎么放，放什么，五花八门。 #在MDN中 依据文章HTTP 身份验证 认证的流程基本就是，客户端请求，服">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-03T14:39:49.000Z">
+<meta property="article:modified_time" content="2022-12-03T15:35:28.000Z">
+<meta property="article:author" content="el_psy">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="auth">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternative" href="/atom.xml" title="七翼式" type="application/atom+xml">
+  
+  <meta name="summary" content="">
+  <link rel="shortcut icon" href="/favicon/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head>
+
+<body>
+  <div id="loading" class="active"></div>
+
+  <nav id="menu" class="hide" >
+   <div class="inner flex-row-vertical">
+  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+      <i class="icon icon-lg icon-close"></i>
+  </a>
+  <div class="brand-wrap">
+    <div class="brand">
+      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
+      <hgroup class="introduce">
+        <h5 class="nickname">el_psy</h5>
+        <a href="mailto:gaojingjingjing@outlook.com" title="gaojingjingjing@outlook.com" class="mail">gaojingjingjing@outlook.com</a>
+      </hgroup>
+    </div>
+  </div>
+  <div class="scroll-wrap flex-col">
+    <ul class="nav">
+      
+          <li class="waves-block waves-effect">
+            <a href="/"  >
+              <i class="icon icon-lg icon-home"></i>
+              主页
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/archives"  >
+              <i class="icon icon-lg icon-archives"></i>
+              archives
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/categories"  >
+              <i class="icon icon-lg icon-th-list"></i>
+              categories
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/tags"  >
+              <i class="icon icon-lg icon-tags"></i>
+              Tags
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="https://github.com/el-psy" target="_blank" >
+              <i class="icon icon-lg icon-github"></i>
+              Github
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/404"  >
+              <i class="icon icon-lg icon-link"></i>
+              测试
+            </a>
+          </li>
+      
+    </ul>
+
+    <footer class="footer">
+  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
+  <p>七翼式 &copy; 2022</p>
+  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
+  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
+</footer>
+
+  </div>
+</div>
+
+  </nav>
+  <main id="main">
+    <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">HTTP-身份认证</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header">
+  <div class="container">
+    <h1 class="author">HTTP-身份认证</h1>
+    <h5 class="subtitle">
+        
+            <time datetime="2022-12-03T14:39:49.000Z" itemprop="datePublished" class="page-time">
+  2022-12-03
+</time>
+
+
+        
+    </h5>
+  </div>
+</header>
+
+    <div class="container body-wrap">
+      <article id="post-auth" 
+  class="article article-type-post" itemprop="blogPost">
+    <div class="post-meta flex-row">
+        
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/auth/" rel="tag">auth</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
+
+    </div>
+    <div class="post-body">
+        <aside class="post-widget" id="post-widget">
+
+            
+            <nav class="post-toc-wrap" id="post-toc">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E5%89%8D%E8%A8%80"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E6%80%BB%E9%A2%86"><span class="post-toc-number">2.</span> <span class="post-toc-text">总领</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E5%9C%A8mdn%E4%B8%AD"><span class="post-toc-number">3.</span> <span class="post-toc-text">在MDN中</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#cookie"><span class="post-toc-number">4.</span> <span class="post-toc-text">cookie</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#token"><span class="post-toc-number">5.</span> <span class="post-toc-text">token</span></a></li></ol>
+            </nav>
+            
+        </aside>
+
+        <div class="post-main">
+
+            <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="前言"><a class="header-anchor" href="#前言">#</a>前言</h1>
+<p>token，又是前端八股常考且必考。但总是云里雾里。<br>
+这篇文章里也差不多。<br>
+没事可以多看看</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Authentication">HTTP 身份验证</a></li>
+<li><a target="_blank" rel="noopener" href="https://jwt.io/introduction/">Introduction to JSON Web Tokens</a></li>
+<li><a target="_blank" rel="noopener" href="https://oauth.net/2/">OAuth 2.0</a></li>
+</ul>
+<h1 id="总领"><a class="header-anchor" href="#总领">#</a>总领</h1>
+<p>到底怎么认证一个用户？<br>
+简答来说，就是在HTTP头部放一段密文，用于验证。<br>
+至于怎么放，放什么，五花八门。</p>
+<h1 id="在mdn中"><a class="header-anchor" href="#在mdn中">#</a>在MDN中</h1>
+<p>依据文章<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Authentication">HTTP 身份验证</a><br>
+认证的流程基本就是，客户端请求，服务端通过<code>WWW-Authenticate</code>首部通知如何认证；然后经过认证后，客户端使用<code>Authorization</code>发送认证字段。</p>
+<p>至于认证的方案：</p>
+<ol>
+<li>Basic (查看 RFC 7617，base64 编码凭证。),</li>
+<li>Bearer (查看 RFC 6750，bearer 令牌通过 OAuth 2.0 保护资源),</li>
+<li>Digest (查看 RFC 7616，只有 md5 散列 在 Firefox 中支持，查看 bug 472823 用于 SHA 加密支持),</li>
+<li>HOBA (查看 RFC 7486（草案），HTTP Origin-Bound 认证，基于数字签名),</li>
+<li>Mutual (查看 draft-ietf-httpauth-mutual),</li>
+<li>AWS4-HMAC-SHA256 (查看 AWS docs).</li>
+</ol>
+<p>。。基本就是Basic和Bearer。剩下的我也不知道。。</p>
+<p>Basic最简单了，用&quot;:&quot;将用户名和密码拼接，然后使用base64编码，就完事了。参见<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Authorization">Authorization</a></p>
+<p>Bearer的可以参见<a target="_blank" rel="noopener" href="https://oauth.net/2/">OAuth 2.0</a>。反正我是没怎么看懂。</p>
+<h1 id="cookie"><a class="header-anchor" href="#cookie">#</a>cookie</h1>
+<p>首先cookie是什么样的？<br>
+在浏览器中的开发者工具中开启网络选项页可以看到，cookie在请求头中是一个字符串，可以格式化成一堆键值对。<br>
+总之是一个存放数据的地方。<br>
+在Storage api之前是主要存放数据的地方。</p>
+<p>而在flask中的session变量存放的键值对也会放到cookie中</p>
+<p>当然也可以存放密文用于身份验证。</p>
+<h1 id="token"><a class="header-anchor" href="#token">#</a>token</h1>
+<p>世界上或许有很多种token？或许吧。<br>
+但我只知道jsonwebtoken。<br>
+参见<a target="_blank" rel="noopener" href="https://jwt.io/introduction/">Introduction to JSON Web Tokens</a></p>
+<p>jwt分为三部分，头部header，负载payload，签名Signature。<br>
+header包含两部分，token的类型，加密算法<br>
+payload包含各种信息。<br>
+Signature，需要计算。</p>
+<p>首先，头部需要将json转换为字符串，然后经过base64。<br>
+然后负载也一样。<br>
+最后签名需要使用加密算法，将头部负载和密码一起放入。</p>
+<p>在python中<br>
+base64可以用<code>base64</code>库，加密算法可以用<code>hashlib</code>库，hmac算法可以用<code>hmac</code>库。这些库都是默认就有的。<br>
+在js中<br>
+base64可以用<code>atob</code>和<code>btoa</code>函数。</p>
+
+
+
+            </div>
+            
+<nav class="post-nav">
+  
+    <div class="waves-block waves-effect prev fl">
+      <a href="/2022/12/12/flask-self-1/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">flask记录-1</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next fr">
+      <a href="/2022/12/01/cors/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">跨域资源共享</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+            
+            
+        </div>
+    </div>
+</article>
+
+    </div>
+  </main>
+<div class="mask" id="mask"></div>
+<a href="#top" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<script type="text/template" id="search-tpl">
+<li class="item">
+    <a href="/{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</script>
+
+
+<script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

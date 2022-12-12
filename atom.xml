@@ -6,7 +6,7 @@
   <link href="http://localhost:5000/atom.xml" rel="self"/>
   
   <link href="http://localhost:5000/"/>
-  <updated>2022-12-01T06:15:20.000Z</updated>
+  <updated>2022-12-12T05:50:08.000Z</updated>
   <id>http://localhost:5000/</id>
   
   <author>
@@ -15,6 +15,66 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>flask记录-1</title>
+    <link href="http://localhost:5000/2022/12/12/flask-self-1/"/>
+    <id>http://localhost:5000/2022/12/12/flask-self-1/</id>
+    <published>2022-12-12T04:40:41.000Z</published>
+    <updated>2022-12-12T05:50:08.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="源点"><a class="header-anchor" href="#源点">#</a>源点</h1><p>提高前端项目的体量，需要一个后端支撑。所以选了flask？<br>其实是根据项目面对人群进行的选择。<br>标注面对ml人群，他们很有可能直接一发anaconda，然后里面就默认安装flask。<br>对于那些需要做保密项目，安装开发环境艰难，开发环境简陋的比较友好？<br>毕竟在linux平台安装python的最简单方案就是anaconda。<br>在此记录一下flask项目中的一些bug。<br>毕竟bug数量已经是函数数量的好几倍了。</p><h1 id="启动"><a class="header-anchor" href="#启动">#</a>启动</h1><p>在flask文档中flask的启动是，首先设定一个flask相关的临时环境变量，然后通过<code>flask run</code>命令启动。<br>如果文件名是<code>app.py</code>等几种，也可以直接<code>flask run</code>。</p><p>我就直接</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">app = create_app()</span><br><span class="line">app.run(debug=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure><p>其中<code>debug=True</code>开启了debug模式，如果修改文件，则自动重启flask服务。<br>这种方法适用于开发模式。<br>当然，我也没想着能够部署。</p><h1 id="cors"><a class="header-anchor" href="#cors">#</a>cors</h1><p>cors非常轻松。<br>直接安装<code>flask_cors</code>包。<br>然后在<code>config.py</code>中设置对应配置，然后导入即可。<br>然后就可以轻松在前端进行<code>ajax</code>通信了。</p><h1 id="json-web-token"><a class="header-anchor" href="#json-web-token">#</a>json web token</h1><p>可以看看<a href="https://jwt.io/introduction/">Introduction to JSON Web Tokens</a><br>这里使用了<code>pyjwt</code>。<br>jwt分为三段。</p><blockquote><p>第一段是</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;alg&quot;</span>: <span class="string">&quot;HS256&quot;</span>, # 加密算法</span><br><span class="line">  <span class="string">&quot;typ&quot;</span>: <span class="string">&quot;JWT&quot;</span> # 代表token类型是json web token</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>然后进行base64转换。这是明文。</p></blockquote><blockquote><p>第二段是一些json记录。<br>其中一些键是保留字段。<br>在pyjwt中实现了一下<br><code>exp</code> (Expiration Time) Claim 到期时间<br><code>nbf</code> (Not Before Time) Claim 起始时间，在这之前的请求不予处理<br><code>iss</code> (Issuer) Claim 发行人<br><code>aud</code> (Audience) Claim 受众，我也不清楚这是什么<br><code>iat</code> (Issued At) Claim 发行时间<br>总之，我用了<code>iat</code>和<code>exp</code>，限制了token的生效时间。<br>然后自定义了一个<code>actor</code>字段描述用户角色。<br>最后把这段进行base64转换。这是明文。</p></blockquote><blockquote><p>第三段是密文<br>就是根据生成的密码，对第一段和第二段进行加密，防止用户修改第一段和第二段（第一段和第二段是明文）。<br>如果用户修改第一段和第二段，就可以通过密文和明文比对发现。<br>加密算法在第一段中声明了<br>或许还会用到hmac。hmac和hashlib都是Python的默认库。</p></blockquote><p>jwt加密密码是每次启动flask时清空，调用时如果为空使用<code>secret</code>包生成一份。</p><h1 id="auth"><a class="header-anchor" href="#auth">#</a>auth</h1><p>auth用户认证。包括用户身份认证，注册登录注销等。</p><p>首先使用了<code>flask_auth</code>包。<br>使用了里面的<code>HTTPTokenAuth</code><br>里面的认证机制有两个。</p><ol><li>authenticate<br>本来是用户名和密码进行验证。<br><code>HTTPTokenAuth</code>对应的则是token能否被验证。这里通过pyjwt进行。<br>对应的函数需要使用<code>@auth.verify_token</code>装饰一下</li><li>authorize<br>是用来验证用户的角色的。访问某些url需要验证一下用户角色。<br>而这个项目的用户角色存放在token中，在解析token时就返回了。<br>总之建议阅读这个<code>authorize</code>的源码。<br>说实话，源码比文档好读。。</li></ol><p>这里注册是密码直接明文放到数据库中了。至于如何加密，在flask文档中有。<br>登录就直接向前端发一个token。至于这个token后端也没有记录。<br>注销功能后端就直接没写。直接让前端删除token吧。反正前端估计也是我写。</p><h1 id="db"><a class="header-anchor" href="#db">#</a>db</h1><p>数据库使用的是python自带的sqlite3。<br>首先在flask文档里把db的句柄（就是sqlite3.connect返回的那个）存到了<code>g</code>对象中。<br>这是有原因的。<br>sqlite3的文件crud权限有同时只能有一个线程的限制。<br>所以文档里最后还有个<code>app.teardown_appcontext</code><br>但是我这里的<code>init_db</code>就直接运行<code>db.py</code>就可以了。。</p><h1 id="db-execute"><a class="header-anchor" href="#db-execute">#</a>db.execute</h1><p>在数据库操作中的bug。。<br>首先，这个<code>db.execute</code>可以进行字符串转换，防止注入（好像是这样的）。<br>然后输入数据时需要<code>()</code>，如果只有一个变量，勿忘在变量后加一个逗号。<br>同时进行多组时可以使用<code>executemany</code>。</p><h1 id="获得参数之后"><a class="header-anchor" href="#获得参数之后">#</a>获得参数之后</h1><p>第一步就是对参数的结构进行认证。<br>或者是确认参数类型？<br>为此直接在<code>utils.py</code>来了一发<code>req_need_key</code>函数。</p><h1 id="其他"><a class="header-anchor" href="#其他">#</a>其他</h1><p>当然还有问题。<br>比如在编写到中途时修改数据库结构。<br>反正直接一发<code>init_db</code>就可以。<br>还有<code>task</code>任务需要时间线限制。还没编写。<br>总之，问题多多。大不了交给前端。<br>反正前端也是在下。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;源点&quot;&gt;&lt;a class=&quot;header-anchor&quot; href=&quot;#源点&quot;&gt;#&lt;/a&gt;源点&lt;/h1&gt;
+&lt;p&gt;提高前端项目的体量，需要一个后端支撑。所以选了flask？&lt;br&gt;
+其实是根据项目面对人群进行的选择。&lt;br&gt;
+标注面对ml人群，他们很有可能直接一发a</summary>
+      
+    
+    
+    
+    <category term="后端" scheme="http://localhost:5000/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="flask" scheme="http://localhost:5000/categories/%E5%90%8E%E7%AB%AF/flask/"/>
+    
+    
+    <category term="后端" scheme="http://localhost:5000/tags/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="flask" scheme="http://localhost:5000/tags/flask/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>HTTP-身份认证</title>
+    <link href="http://localhost:5000/2022/12/03/auth/"/>
+    <id>http://localhost:5000/2022/12/03/auth/</id>
+    <published>2022-12-03T14:39:49.000Z</published>
+    <updated>2022-12-03T15:35:28.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a class="header-anchor" href="#前言">#</a>前言</h1><p>token，又是前端八股常考且必考。但总是云里雾里。<br>这篇文章里也差不多。<br>没事可以多看看</p><ul><li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Authentication">HTTP 身份验证</a></li><li><a href="https://jwt.io/introduction/">Introduction to JSON Web Tokens</a></li><li><a href="https://oauth.net/2/">OAuth 2.0</a></li></ul><h1 id="总领"><a class="header-anchor" href="#总领">#</a>总领</h1><p>到底怎么认证一个用户？<br>简答来说，就是在HTTP头部放一段密文，用于验证。<br>至于怎么放，放什么，五花八门。</p><h1 id="在mdn中"><a class="header-anchor" href="#在mdn中">#</a>在MDN中</h1><p>依据文章<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Authentication">HTTP 身份验证</a><br>认证的流程基本就是，客户端请求，服务端通过<code>WWW-Authenticate</code>首部通知如何认证；然后经过认证后，客户端使用<code>Authorization</code>发送认证字段。</p><p>至于认证的方案：</p><ol><li>Basic (查看 RFC 7617，base64 编码凭证。),</li><li>Bearer (查看 RFC 6750，bearer 令牌通过 OAuth 2.0 保护资源),</li><li>Digest (查看 RFC 7616，只有 md5 散列 在 Firefox 中支持，查看 bug 472823 用于 SHA 加密支持),</li><li>HOBA (查看 RFC 7486（草案），HTTP Origin-Bound 认证，基于数字签名),</li><li>Mutual (查看 draft-ietf-httpauth-mutual),</li><li>AWS4-HMAC-SHA256 (查看 AWS docs).</li></ol><p>。。基本就是Basic和Bearer。剩下的我也不知道。。</p><p>Basic最简单了，用&quot;:&quot;将用户名和密码拼接，然后使用base64编码，就完事了。参见<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Authorization">Authorization</a></p><p>Bearer的可以参见<a href="https://oauth.net/2/">OAuth 2.0</a>。反正我是没怎么看懂。</p><h1 id="cookie"><a class="header-anchor" href="#cookie">#</a>cookie</h1><p>首先cookie是什么样的？<br>在浏览器中的开发者工具中开启网络选项页可以看到，cookie在请求头中是一个字符串，可以格式化成一堆键值对。<br>总之是一个存放数据的地方。<br>在Storage api之前是主要存放数据的地方。</p><p>而在flask中的session变量存放的键值对也会放到cookie中</p><p>当然也可以存放密文用于身份验证。</p><h1 id="token"><a class="header-anchor" href="#token">#</a>token</h1><p>世界上或许有很多种token？或许吧。<br>但我只知道jsonwebtoken。<br>参见<a href="https://jwt.io/introduction/">Introduction to JSON Web Tokens</a></p><p>jwt分为三部分，头部header，负载payload，签名Signature。<br>header包含两部分，token的类型，加密算法<br>payload包含各种信息。<br>Signature，需要计算。</p><p>首先，头部需要将json转换为字符串，然后经过base64。<br>然后负载也一样。<br>最后签名需要使用加密算法，将头部负载和密码一起放入。</p><p>在python中<br>base64可以用<code>base64</code>库，加密算法可以用<code>hashlib</code>库，hmac算法可以用<code>hmac</code>库。这些库都是默认就有的。<br>在js中<br>base64可以用<code>atob</code>和<code>btoa</code>函数。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a class=&quot;header-anchor&quot; href=&quot;#前言&quot;&gt;#&lt;/a&gt;前言&lt;/h1&gt;
+&lt;p&gt;token，又是前端八股常考且必考。但总是云里雾里。&lt;br&gt;
+这篇文章里也差不多。&lt;br&gt;
+没事可以多看看&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;</summary>
+      
+    
+    
+    
+    
+    <category term="前端" scheme="http://localhost:5000/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="auth" scheme="http://localhost:5000/tags/auth/"/>
+    
+  </entry>
   
   <entry>
     <title>跨域资源共享</title>
