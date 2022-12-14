@@ -1,0 +1,370 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>petite-vue学习记录2 | 七翼式 | 不对称</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="theme-color" content="#3F51B5">
+  
+  
+  <meta name="keywords" content="前端,框架,petite-vue">
+  <meta name="description" content="#petite-vue 调用流程 目录结构 12345678910111213141516171819202122232425(venv) PS F:\lite\petite-vue\src&gt; tree &#x2F;f文件夹 PATH 列表卷序列号为 0123-4567F:.│  app.ts│  block.ts│  context.ts│  eval.ts│  index.ts│  schedul">
+<meta property="og:type" content="article">
+<meta property="og:title" content="petite-vue学习记录2">
+<meta property="og:url" content="http://localhost:5000/2022/12/14/petite-vue-learn-2/index.html">
+<meta property="og:site_name" content="七翼式">
+<meta property="og:description" content="#petite-vue 调用流程 目录结构 12345678910111213141516171819202122232425(venv) PS F:\lite\petite-vue\src&gt; tree &#x2F;f文件夹 PATH 列表卷序列号为 0123-4567F:.│  app.ts│  block.ts│  context.ts│  eval.ts│  index.ts│  schedul">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-13T16:15:26.000Z">
+<meta property="article:modified_time" content="2022-12-14T05:51:20.000Z">
+<meta property="article:author" content="el_psy">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="框架">
+<meta property="article:tag" content="petite-vue">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternative" href="/atom.xml" title="七翼式" type="application/atom+xml">
+  
+  <meta name="summary" content="">
+  <link rel="shortcut icon" href="/favicon/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head>
+
+<body>
+  <div id="loading" class="active"></div>
+
+  <nav id="menu" class="hide" >
+   <div class="inner flex-row-vertical">
+  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+      <i class="icon icon-lg icon-close"></i>
+  </a>
+  <div class="brand-wrap">
+    <div class="brand">
+      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
+      <hgroup class="introduce">
+        <h5 class="nickname">el_psy</h5>
+        <a href="mailto:gaojingjingjing@outlook.com" title="gaojingjingjing@outlook.com" class="mail">gaojingjingjing@outlook.com</a>
+      </hgroup>
+    </div>
+  </div>
+  <div class="scroll-wrap flex-col">
+    <ul class="nav">
+      
+          <li class="waves-block waves-effect">
+            <a href="/"  >
+              <i class="icon icon-lg icon-home"></i>
+              主页
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/archives"  >
+              <i class="icon icon-lg icon-archives"></i>
+              archives
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/categories"  >
+              <i class="icon icon-lg icon-th-list"></i>
+              categories
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/tags"  >
+              <i class="icon icon-lg icon-tags"></i>
+              Tags
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="https://github.com/el-psy" target="_blank" >
+              <i class="icon icon-lg icon-github"></i>
+              Github
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/404"  >
+              <i class="icon icon-lg icon-link"></i>
+              测试
+            </a>
+          </li>
+      
+    </ul>
+
+    <footer class="footer">
+  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
+  <p>七翼式 &copy; 2022</p>
+  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
+  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
+</footer>
+
+  </div>
+</div>
+
+  </nav>
+  <main id="main">
+    <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">petite-vue学习记录2</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header">
+  <div class="container">
+    <h1 class="author">petite-vue学习记录2</h1>
+    <h5 class="subtitle">
+        
+            <time datetime="2022-12-13T16:15:26.000Z" itemprop="datePublished" class="page-time">
+  2022-12-14
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/%E6%A1%86%E6%9E%B6/">框架</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/%E6%A1%86%E6%9E%B6/petite-vue/">petite-vue</a></li></ul></li></ul></li></ul>
+
+        
+    </h5>
+  </div>
+</header>
+
+    <div class="container body-wrap">
+      <article id="post-petite-vue-learn-2" 
+  class="article article-type-post" itemprop="blogPost">
+    <div class="post-meta flex-row">
+        
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/petite-vue/" rel="tag">petite-vue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag">框架</a></li></ul>
+
+    </div>
+    <div class="post-body">
+        <aside class="post-widget" id="post-widget">
+
+            
+            <nav class="post-toc-wrap" id="post-toc">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#petite-vue-%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="post-toc-number">1.</span> <span class="post-toc-text">petite-vue 调用流程</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#index-ts"><span class="post-toc-number">2.</span> <span class="post-toc-text">index.ts</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#app-ts"><span class="post-toc-number">3.</span> <span class="post-toc-text">app.ts</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#createapp%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">createApp初始化</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#directive"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">directive</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#mount"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">mount</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#unmount"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">unmount</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#block-ts"><span class="post-toc-number">4.</span> <span class="post-toc-text">block.ts</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#block%E7%B1%BB%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">Block类的属性</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#block%E7%B1%BB%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">Block类的初始化</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#walk-ts"><span class="post-toc-number">5.</span> <span class="post-toc-text">walk.ts</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nodetype-1"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">nodeType&#x3D;&#x3D;1</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nodetype-3"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">nodeType&#x3D;&#x3D;3</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nodetype-11"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">nodeType&#x3D;&#x3D;11</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#context-ts"><span class="post-toc-number">6.</span> <span class="post-toc-text">context.ts</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#createcontext"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">createContext</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#createscopedcontext"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">createScopedContext</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#bindcontextmethods"><span class="post-toc-number">6.3.</span> <span class="post-toc-text">bindContextMethods</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E5%85%B6%E4%BB%96"><span class="post-toc-number">7.</span> <span class="post-toc-text">其他</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#eval-ts"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">eval.ts</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#scheduler-ts"><span class="post-toc-number">7.2.</span> <span class="post-toc-text">scheduler.ts</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#utils-ts"><span class="post-toc-number">7.3.</span> <span class="post-toc-text">utils.ts</span></a></li></ol></li></ol>
+            </nav>
+            
+        </aside>
+
+        <div class="post-main">
+
+            <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="petite-vue-调用流程"><a class="header-anchor" href="#petite-vue-调用流程">#</a>petite-vue 调用流程</h1>
+<p>目录结构</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">(venv) <span class="built_in">PS</span> F:\lite\petite<span class="literal">-vue</span>\src&gt; tree /f</span><br><span class="line">文件夹 PATH 列表</span><br><span class="line">卷序列号为 <span class="number">0123</span><span class="literal">-4567</span></span><br><span class="line">F:.</span><br><span class="line">│  app.ts</span><br><span class="line">│  block.ts</span><br><span class="line">│  context.ts</span><br><span class="line">│  eval.ts</span><br><span class="line">│  index.ts</span><br><span class="line">│  scheduler.ts</span><br><span class="line">│  utils.ts</span><br><span class="line">│  walk.ts</span><br><span class="line">│</span><br><span class="line">└─directives</span><br><span class="line">        bind.ts</span><br><span class="line">        effect.ts</span><br><span class="line">        for.ts</span><br><span class="line">        html.ts</span><br><span class="line">        if.ts</span><br><span class="line">        index.ts</span><br><span class="line">        model.ts</span><br><span class="line">        on.ts</span><br><span class="line">        ref.ts</span><br><span class="line">        show.ts</span><br><span class="line">        text.ts</span><br></pre></td></tr></table></figure>
+<p>大致来说，</p>
+<ol>
+<li>从<code>index.ts</code>中导出各种东西，包括在<code>app.ts</code>中的<code>createApp</code>。</li>
+<li>然后创建<code>app</code>实例。过程中，首先通过<code>context.ts</code>创建了<code>ctx</code>对象，保管创建<code>createApp</code>时的一些参数。</li>
+<li>然后调用<code>mount</code>方法，挂载在dom节点上。首先会找一个<code>root</code>节点列表。也就是有<code>v-scope</code>属性的那种。</li>
+<li>然后调用<code>block.ts</code>的<code>Block</code>。过程中会检查是否是<code>root</code>节点列表中的根节点。</li>
+<li>然后调用<code>walk.ts</code>中的<code>walk</code>，不断检查所有节点。</li>
+<li>检查节点过程中检查所有的指令，就是<code>directives</code>文件夹下那种。</li>
+<li>调用对应指令，通过<code>ctx.effect</code>之类的。调用之后会将其保存。如果需要响应式调用会调用响应函数，完成响应式应答。</li>
+</ol>
+<p>至于响应式原理，不在这里。可以看看<code>@vue/reactivity</code>？</p>
+<h1 id="index-ts"><a class="header-anchor" href="#index-ts">#</a>index.ts</h1>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> &#123; createApp &#125; <span class="keyword">from</span> <span class="string">&#x27;./app&#x27;</span></span><br><span class="line"><span class="keyword">export</span> &#123; nextTick &#125; <span class="keyword">from</span> <span class="string">&#x27;./scheduler&#x27;</span></span><br><span class="line"><span class="keyword">export</span> &#123; reactive &#125; <span class="keyword">from</span> <span class="string">&#x27;@vue/reactivity&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; createApp &#125; <span class="keyword">from</span> <span class="string">&#x27;./app&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> s = <span class="variable language_">document</span>.<span class="property">currentScript</span></span><br><span class="line"><span class="keyword">if</span> (s &amp;&amp; s.<span class="title function_">hasAttribute</span>(<span class="string">&#x27;init&#x27;</span>)) &#123;</span><br><span class="line">  <span class="title function_">createApp</span>().<span class="title function_">mount</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里暴露了<code>createApp</code>，<code>nextTick</code>，<code>reactive</code>，三个接口。<br>
+<code>createApp</code>用于创建<code>app</code>实例。<br>
+<code>nextTick</code>用于解决响应式不能立即应答的问题。<br>
+<code>reactive</code>暴露vue的响应式变量创建接口。</p>
+<h1 id="app-ts"><a class="header-anchor" href="#app-ts">#</a>app.ts</h1>
+<p>核心就是<code>createApp</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">createApp = <span class="keyword">function</span>(<span class="params">initialData</span>)&#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">		<span class="attr">directive</span>:()&#123;&#125;,</span><br><span class="line">		<span class="attr">mount</span>:()&#123;&#125;,</span><br><span class="line">		<span class="attr">unmount</span>:()&#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="createapp初始化"><a class="header-anchor" href="#createapp初始化">#</a>createApp初始化</h2>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// root context</span></span><br><span class="line"><span class="keyword">const</span> ctx = <span class="title function_">createContext</span>()</span><br><span class="line"><span class="keyword">if</span> (initialData) &#123;</span><br><span class="line">  ctx.<span class="property">scope</span> = <span class="title function_">reactive</span>(initialData)</span><br><span class="line">  <span class="title function_">bindContextMethods</span>(ctx.<span class="property">scope</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// handle custom delimiters</span></span><br><span class="line">  <span class="keyword">if</span> (initialData.<span class="property">$delimiters</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> [open, close] = (ctx.<span class="property">delimiters</span> = initialData.<span class="property">$delimiters</span>)</span><br><span class="line">    ctx.<span class="property">delimitersRE</span> = <span class="keyword">new</span> <span class="title class_">RegExp</span>(</span><br><span class="line">      escapeRegex(open) + <span class="string">&#x27;([^]+?)&#x27;</span> + escapeRegex(close),</span><br><span class="line">      <span class="string">&#x27;g&#x27;</span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// global internal helpers</span></span><br><span class="line">ctx.<span class="property">scope</span>.<span class="property">$s</span> = toDisplayString</span><br><span class="line">ctx.<span class="property">scope</span>.<span class="property">$nextTick</span> = nextTick</span><br><span class="line">ctx.<span class="property">scope</span>.<span class="property">$refs</span> = <span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="literal">null</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">rootBlocks</span>: <span class="title class_">Block</span>[]</span><br></pre></td></tr></table></figure>
+<p>首先是使用<code>context.ts</code>中的<code>createContext</code>方法创建了一个<code>ctx</code>对象。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> <span class="title class_">Context</span> &#123;</span><br><span class="line">  key?: <span class="built_in">any</span> <span class="comment">// 不清楚有什么用</span></span><br><span class="line">  <span class="attr">scope</span>: <span class="title class_">Record</span>&lt;<span class="built_in">string</span>, <span class="built_in">any</span>&gt; <span class="comment">// 响应式对象存放</span></span><br><span class="line">  <span class="attr">dirs</span>: <span class="title class_">Record</span>&lt;<span class="built_in">string</span>, <span class="title class_">Directive</span>&gt; <span class="comment">// 存放自定义指令</span></span><br><span class="line">  <span class="attr">blocks</span>: <span class="title class_">Block</span>[] <span class="comment">// 不是由根创建的Block实例，会把创建的Block实例向添加到ctx对象中这个属性中</span></span><br><span class="line">  <span class="attr">effect</span>: <span class="keyword">typeof</span> rawEffect <span class="comment">// 一个函数，会把指令生成的响应式函数注入到ctx对象中。</span></span><br><span class="line">  <span class="attr">effects</span>: <span class="title class_">ReactiveEffectRunner</span>[] <span class="comment">// 所谓的响应式函数存放处，和react的effect类似</span></span><br><span class="line">  <span class="attr">cleanups</span>: (<span class="function">() =&gt;</span> <span class="built_in">void</span>)[] <span class="comment">// 不清楚有什么用</span></span><br><span class="line">  <span class="attr">delimiters</span>: [<span class="built_in">string</span>, <span class="built_in">string</span>] <span class="comment">// 分隔符，可以自定义。</span></span><br><span class="line">  <span class="attr">delimitersRE</span>: <span class="title class_">RegExp</span> <span class="comment">// 分隔符对应的一个正则</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后是处理<code>initialData</code><br>
+将<code>initialData</code>响应式化，然后存到<code>ctx</code>的scope中。<br>
+<code>bindContextMethods</code>将<code>ctx.scope</code>下的函数的<code>this</code>绑定到<code>ctx.scope</code>上。</p>
+<p>然后是对<code>ctx.scope</code>进行一些绑定。</p>
+<p>最后创建了一个<code>rootBlocks</code>列表。<br>
+在返回值中会用到。</p>
+<h2 id="directive"><a class="header-anchor" href="#directive">#</a>directive</h2>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">directive</span>(<span class="params">name: <span class="built_in">string</span>, def?: Directive</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (def) &#123;</span><br><span class="line">        ctx.<span class="property">dirs</span>[name] = def</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ctx.<span class="property">dirs</span>[name]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<p>将指令定义函数存放到<code>ctx.dirs</code>中。<br>
+如果没有输入<code>def</code>参数，则返回<code>ctx.dirs[name]</code>。</p>
+<h2 id="mount"><a class="header-anchor" href="#mount">#</a>mount</h2>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">mount</span>(<span class="params">el?: <span class="built_in">string</span> | Element | <span class="literal">null</span></span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> el === <span class="string">&#x27;string&#x27;</span>) &#123;</span><br><span class="line">        el = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(el)</span><br><span class="line">        <span class="keyword">if</span> (!el) &#123;</span><br><span class="line">          <span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">env</span>.<span class="property">DEV</span> &amp;&amp;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`selector <span class="subst">$&#123;el&#125;</span> has no matching element.`</span>)</span><br><span class="line">          <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      el = el || <span class="variable language_">document</span>.<span class="property">documentElement</span></span><br><span class="line">      <span class="keyword">let</span> <span class="attr">roots</span>: <span class="title class_">Element</span>[]</span><br><span class="line">      <span class="keyword">if</span> (el.<span class="title function_">hasAttribute</span>(<span class="string">&#x27;v-scope&#x27;</span>)) &#123;</span><br><span class="line">        roots = [el]</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        roots = [...el.<span class="title function_">querySelectorAll</span>(<span class="string">`[v-scope]`</span>)].<span class="title function_">filter</span>(</span><br><span class="line">          <span class="function">(<span class="params">root</span>) =&gt;</span> !root.<span class="title function_">matches</span>(<span class="string">`[v-scope] [v-scope]`</span>)</span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (!roots.<span class="property">length</span>) &#123;</span><br><span class="line">        roots = [el]</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (</span><br><span class="line">        <span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">env</span>.<span class="property">DEV</span> &amp;&amp;</span><br><span class="line">        roots.<span class="property">length</span> === <span class="number">1</span> &amp;&amp;</span><br><span class="line">        roots[<span class="number">0</span>] === <span class="variable language_">document</span>.<span class="property">documentElement</span></span><br><span class="line">      ) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">warn</span>(</span><br><span class="line">          <span class="string">`Mounting on documentElement - this is non-optimal as petite-vue `</span> +</span><br><span class="line">            <span class="string">`will be forced to crawl the entire page&#x27;s DOM. `</span> +</span><br><span class="line">            <span class="string">`Consider explicitly marking elements controlled by petite-vue `</span> +</span><br><span class="line">            <span class="string">`with \`v-scope\`.`</span></span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      rootBlocks = roots.<span class="title function_">map</span>(<span class="function">(<span class="params">el</span>) =&gt;</span> <span class="keyword">new</span> <span class="title class_">Block</span>(el, ctx, <span class="literal">true</span>))</span><br><span class="line">      <span class="keyword">return</span> <span class="variable language_">this</span></span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<p>首先是处理<code>el</code>参数。</p>
+<p>如果是<code>string</code>类型，则使用<code>el.querySelectorAll</code>查找所有dom节点。<br>
+如果是<code>null</code>，则默认为<code>html</code>节点。<br>
+如果是<code>Element</code>，不予处理</p>
+<p>然后是生成<code>roots</code><br>
+如果<code>el</code>节点带有<code>v-scope</code>属性，则<code>roots = [el]</code>。<br>
+否则<code>roots</code>为<code>el</code>节点下有<code>v-scope</code>属性的dom节点。<br>
+如果<code>el</code>节点下没有属性<code>v-scope</code>的节点，则<code>roots = [el]</code>。</p>
+<p>接下来检查<code>warn</code>。<br>
+如果在构建工具中处于开发模式，并且<code>el</code>参数为<code>null</code>,并且没有使用<code>v-scope</code>。<br>
+则发出警告。</p>
+<p>最后创建<code>Block</code>实例。<br>
+输入<code>el</code>dom节点，<code>ctx</code>对象，<code>isRoot</code>参数为<code>true</code>。<br>
+并将<code>Block</code>实例保存在<code>rootBlocks</code>中，就是<code>createApp</code>初始化最后创建的那个。</p>
+<h2 id="unmount"><a class="header-anchor" href="#unmount">#</a>unmount</h2>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rootBlocks.<span class="title function_">forEach</span>(<span class="function">(<span class="params">block</span>) =&gt;</span> block.<span class="title function_">teardown</span>())</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>没什么可讲的。<br>
+使用<code>block</code>实例的<code>teardown</code>方法卸载。</p>
+<h1 id="block-ts"><a class="header-anchor" href="#block-ts">#</a>block.ts</h1>
+<p>只能说，在<code>app.ts</code>中的<code>createApp.mount</code>中会用到。<br>
+在某些指令中也会用到。</p>
+<h2 id="block类的属性"><a class="header-anchor" href="#block类的属性">#</a><code>Block</code>类的属性</h2>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Block</span> &#123;</span><br><span class="line">  <span class="attr">template</span>: <span class="title class_">Element</span> | <span class="title class_">DocumentFragment</span> <span class="comment">// 一个dom节点，也是模板。</span></span><br><span class="line">  <span class="attr">ctx</span>: <span class="title class_">Context</span> <span class="comment">// ctx对象</span></span><br><span class="line">  key?: <span class="built_in">any</span> <span class="comment">// 不清楚</span></span><br><span class="line">  parentCtx?: <span class="title class_">Context</span> <span class="comment">// ctx对象。</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">isFragment</span>: <span class="built_in">boolean</span> <span class="comment">// 是否使用template模板</span></span><br><span class="line">  start?: <span class="title class_">Text</span> <span class="comment">// 在 insert()中初始化了。</span></span><br><span class="line">  end?: <span class="title class_">Text</span> <span class="comment">// 在 insert() 中初始化了。</span></span><br></pre></td></tr></table></figure>
+<h2 id="block类的初始化"><a class="header-anchor" href="#block类的初始化">#</a><code>Block</code>类的初始化</h2>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">constructor</span>(<span class="params">template: Element, parentCtx: Context, isRoot = <span class="literal">false</span></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">isFragment</span> = template <span class="keyword">instanceof</span> <span class="title class_">HTMLTemplateElement</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (isRoot) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">template</span> = template</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">isFragment</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">template</span> = (template <span class="keyword">as</span> <span class="title class_">HTMLTemplateElement</span>).<span class="property">content</span>.<span class="title function_">cloneNode</span>(</span><br><span class="line">        <span class="literal">true</span></span><br><span class="line">      ) <span class="keyword">as</span> <span class="title class_">DocumentFragment</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">template</span> = template.<span class="title function_">cloneNode</span>(<span class="literal">true</span>) <span class="keyword">as</span> <span class="title class_">Element</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (isRoot) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">ctx</span> = parentCtx</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// create child context</span></span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">parentCtx</span> = parentCtx</span><br><span class="line">      parentCtx.<span class="property">blocks</span>.<span class="title function_">push</span>(<span class="variable language_">this</span>)</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">ctx</span> = <span class="title function_">createContext</span>(parentCtx)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">walk</span>(<span class="variable language_">this</span>.<span class="property">template</span>, <span class="variable language_">this</span>.<span class="property">ctx</span>)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>首先判断<code>template</code>是否为<code>template</code>模板，结果存放到<code>this.isFragment</code>中。</p>
+<p>然后处理<code>this.template</code>。<br>
+如果<code>isRoot</code>为真，<code>this.template = template</code>。<br>
+如果<code>this.isFragment</code>为真，将<code>template.content</code>复制一份放到<code>this.template</code>中。<br>
+否则，，将<code>template</code>复制一份放到<code>this.template</code>中。</p>
+<p>接下来处理<code>this.ctx</code><br>
+如果<code>isRoot</code>为真，<code>this.ctx = parentCtx</code>。<br>
+否则，将<code>parentCtx</code>存到<code>this.parentCtx</code>中，然后将block实例存到<code>parentCtx</code>的<code>blocks</code>中，然后重新创建一个<code>ctx</code>对象。</p>
+<p>最后使用<code>walk.ts</code>的<code>walk</code>，处理模板中所有需要响应式的地方。</p>
+<h1 id="walk-ts"><a class="header-anchor" href="#walk-ts">#</a>walk.ts</h1>
+<p>递归处理所有dom节点。<br>
+首先会检查节点的<code>nodeType</code>。</p>
+<h2 id="nodetype-1"><a class="header-anchor" href="#nodetype-1">#</a>nodeType==1</h2>
+<p>这代表节点为<code>html</code>元素。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">type</span> === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="comment">// Element</span></span><br><span class="line">    <span class="keyword">const</span> el = node <span class="keyword">as</span> <span class="title class_">Element</span></span><br><span class="line">    <span class="keyword">if</span> (el.<span class="title function_">hasAttribute</span>(<span class="string">&#x27;v-pre&#x27;</span>)) &#123;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">checkAttr</span>(el, <span class="string">&#x27;v-cloak&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="attr">exp</span>: <span class="built_in">string</span> | <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// v-if</span></span><br><span class="line">    <span class="keyword">if</span> ((exp = <span class="title function_">checkAttr</span>(el, <span class="string">&#x27;v-if&#x27;</span>))) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">_if</span>(el, exp, ctx)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// v-for</span></span><br><span class="line">    <span class="keyword">if</span> ((exp = <span class="title function_">checkAttr</span>(el, <span class="string">&#x27;v-for&#x27;</span>))) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">_for</span>(el, exp, ctx)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// v-scope</span></span><br><span class="line">    <span class="keyword">if</span> ((exp = <span class="title function_">checkAttr</span>(el, <span class="string">&#x27;v-scope&#x27;</span>)) || exp === <span class="string">&#x27;&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> scope = exp ? evaluate(ctx.<span class="property">scope</span>, exp) : &#123;&#125;</span><br><span class="line">      ctx = <span class="title function_">createScopedContext</span>(ctx, scope)</span><br><span class="line">      <span class="keyword">if</span> (scope.<span class="property">$template</span>) &#123;</span><br><span class="line">        <span class="title function_">resolveTemplate</span>(el, scope.<span class="property">$template</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// v-once</span></span><br><span class="line">    <span class="keyword">const</span> hasVOnce = <span class="title function_">checkAttr</span>(el, <span class="string">&#x27;v-once&#x27;</span>) != <span class="literal">null</span></span><br><span class="line">    <span class="keyword">if</span> (hasVOnce) &#123;</span><br><span class="line">      inOnce = <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ref</span></span><br><span class="line">    <span class="keyword">if</span> ((exp = <span class="title function_">checkAttr</span>(el, <span class="string">&#x27;ref&#x27;</span>))) &#123;</span><br><span class="line">      <span class="title function_">applyDirective</span>(el, ref, <span class="string">`&quot;<span class="subst">$&#123;exp&#125;</span>&quot;`</span>, ctx)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// process children first before self attrs</span></span><br><span class="line">    <span class="title function_">walkChildren</span>(el, ctx)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// other directives</span></span><br><span class="line">    <span class="keyword">const</span> <span class="attr">deferred</span>: [<span class="built_in">string</span>, <span class="built_in">string</span>][] = []</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> &#123; name, value &#125; <span class="keyword">of</span> [...el.<span class="property">attributes</span>]) &#123;</span><br><span class="line">      <span class="keyword">if</span> (dirRE.<span class="title function_">test</span>(name) &amp;&amp; name !== <span class="string">&#x27;v-cloak&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (name === <span class="string">&#x27;v-model&#x27;</span>) &#123;</span><br><span class="line">          <span class="comment">// defer v-model since it relies on :value bindings to be processed</span></span><br><span class="line">          <span class="comment">// first, but also before v-on listeners (#73)</span></span><br><span class="line">          deferred.<span class="title function_">unshift</span>([name, value])</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (name[<span class="number">0</span>] === <span class="string">&#x27;@&#x27;</span> || <span class="regexp">/^v-on\b/</span>.<span class="title function_">test</span>(name)) &#123;</span><br><span class="line">          deferred.<span class="title function_">push</span>([name, value])</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="title function_">processDirective</span>(el, name, value, ctx)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> [name, value] <span class="keyword">of</span> deferred) &#123;</span><br><span class="line">      <span class="title function_">processDirective</span>(el, name, value, ctx)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (hasVOnce) &#123;</span><br><span class="line">      inOnce = <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>如果节点有属性<code>v-pre</code>，中断。</p>
+<p>如果有<code>v-cloak</code>属性，清除该属性。</p>
+<p>接下来处理<code>v-if</code>和<code>v-for</code>。并返回<code>el</code>的下一个dom节点。</p>
+<p>然后是<code>v-scope</code>。<br>
+如果<code>v-scope</code>有属性值，在这里处理。<br>
+如果<code>ctx.scope</code>使用了<code>template</code>模板，在这里处理。</p>
+<p>接下来处理<code>v-once</code>。</p>
+<p>然后调用<code>walkChildren</code>，递归式处理所有dom节点。</p>
+<p>然后处理自定义的指令。</p>
+<h2 id="nodetype-3"><a class="header-anchor" href="#nodetype-3">#</a>nodeType==3</h2>
+<p>这代表为文本节点。</p>
+<p>还记得<code>ctx</code>中定义了分隔符？并且存了一个用于分隔符处理的正则？<br>
+就在这里用上了。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">type</span> === <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="comment">// Text</span></span><br><span class="line">    <span class="keyword">const</span> data = (node <span class="keyword">as</span> <span class="title class_">Text</span>).<span class="property">data</span></span><br><span class="line">    <span class="keyword">if</span> (data.<span class="title function_">includes</span>(ctx.<span class="property">delimiters</span>[<span class="number">0</span>])) &#123;</span><br><span class="line">      <span class="keyword">let</span> <span class="attr">segments</span>: <span class="built_in">string</span>[] = []</span><br><span class="line">      <span class="keyword">let</span> lastIndex = <span class="number">0</span></span><br><span class="line">      <span class="keyword">let</span> match</span><br><span class="line">      <span class="keyword">while</span> ((match = ctx.<span class="property">delimitersRE</span>.<span class="title function_">exec</span>(data))) &#123;</span><br><span class="line">        <span class="keyword">const</span> leading = data.<span class="title function_">slice</span>(lastIndex, match.<span class="property">index</span>)</span><br><span class="line">        <span class="keyword">if</span> (leading) segments.<span class="title function_">push</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(leading))</span><br><span class="line">        segments.<span class="title function_">push</span>(<span class="string">`$s(<span class="subst">$&#123;match[<span class="number">1</span>]&#125;</span>)`</span>)</span><br><span class="line">        lastIndex = match.<span class="property">index</span> + match[<span class="number">0</span>].<span class="property">length</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (lastIndex &lt; data.<span class="property">length</span>) &#123;</span><br><span class="line">        segments.<span class="title function_">push</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(data.<span class="title function_">slice</span>(lastIndex)))</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="title function_">applyDirective</span>(node, text, segments.<span class="title function_">join</span>(<span class="string">&#x27;+&#x27;</span>), ctx)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>虽然没有太看懂。。</p>
+<h2 id="nodetype-11"><a class="header-anchor" href="#nodetype-11">#</a>nodeType==11</h2>
+<p>这代表节点是template标签节点。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">type</span> === <span class="number">11</span>) &#123;</span><br><span class="line">    <span class="title function_">walkChildren</span>(node <span class="keyword">as</span> <span class="title class_">DocumentFragment</span>, ctx)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>直接使用<code>walkChildren</code>进行递归遍历。</p>
+<h1 id="context-ts"><a class="header-anchor" href="#context-ts">#</a>context.ts</h1>
+<p>用于<code>ctx</code>对象相关，包括创建之类的。</p>
+<h2 id="createcontext"><a class="header-anchor" href="#createcontext">#</a>createContext</h2>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> createContext = (parent?: <span class="title class_">Context</span>): <span class="function"><span class="params">Context</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="attr">ctx</span>: <span class="title class_">Context</span> = &#123;</span><br><span class="line">    <span class="attr">delimiters</span>: [<span class="string">&#x27;&#123;&#123;&#x27;</span>, <span class="string">&#x27;&#125;&#125;&#x27;</span>],</span><br><span class="line">    <span class="attr">delimitersRE</span>: <span class="regexp">/\&#123;\&#123;([^]+?)\&#125;\&#125;/g</span>,</span><br><span class="line">    ...parent,</span><br><span class="line">    <span class="attr">scope</span>: parent ? parent.<span class="property">scope</span> : <span class="title function_">reactive</span>(&#123;&#125;),</span><br><span class="line">    <span class="attr">dirs</span>: parent ? parent.<span class="property">dirs</span> : &#123;&#125;,</span><br><span class="line">    <span class="attr">effects</span>: [],</span><br><span class="line">    <span class="attr">blocks</span>: [],</span><br><span class="line">    <span class="attr">cleanups</span>: [],</span><br><span class="line">    <span class="attr">effect</span>: <span class="function">(<span class="params">fn</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (inOnce) &#123;</span><br><span class="line">        <span class="title function_">queueJob</span>(fn)</span><br><span class="line">        <span class="keyword">return</span> fn <span class="keyword">as</span> <span class="built_in">any</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">const</span> <span class="attr">e</span>: <span class="title class_">ReactiveEffectRunner</span> = <span class="title function_">rawEffect</span>(fn, &#123;</span><br><span class="line">        <span class="attr">scheduler</span>: <span class="function">() =&gt;</span> <span class="title function_">queueJob</span>(e)</span><br><span class="line">      &#125;)</span><br><span class="line">      ctx.<span class="property">effects</span>.<span class="title function_">push</span>(e)</span><br><span class="line">      <span class="keyword">return</span> e</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ctx</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>ctx</code>对象的根源。<br>
+在<code>app.ts</code>中，最开始初始化一个空的<code>ctx</code>对象，并把<code>initialData</code>存到<code>ctx.scope</code>中。<br>
+可以明显看到<code>effect</code>，即需要触发的响应式函数所在。<br>
+<code>rawEffect</code>从<code>@vue/reactivity</code>引入。</p>
+<h2 id="createscopedcontext"><a class="header-anchor" href="#createscopedcontext">#</a>createScopedContext</h2>
+<p>在遍历到有<code>v-scope</code>属性的节点时会调用。<br>
+毕竟<code>v-scope</code>是有属性值需要处理。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> createScopedContext = (<span class="attr">ctx</span>: <span class="title class_">Context</span>, data = &#123;&#125;): <span class="function"><span class="params">Context</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> parentScope = ctx.<span class="property">scope</span></span><br><span class="line">  <span class="keyword">const</span> mergedScope = <span class="title class_">Object</span>.<span class="title function_">create</span>(parentScope)</span><br><span class="line">  <span class="title class_">Object</span>.<span class="title function_">defineProperties</span>(mergedScope, <span class="title class_">Object</span>.<span class="title function_">getOwnPropertyDescriptors</span>(data))</span><br><span class="line">  mergedScope.<span class="property">$refs</span> = <span class="title class_">Object</span>.<span class="title function_">create</span>(parentScope.<span class="property">$refs</span>)</span><br><span class="line">  <span class="keyword">const</span> reactiveProxy = <span class="title function_">reactive</span>(</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Proxy</span>(mergedScope, &#123;</span><br><span class="line">      <span class="title function_">set</span>(<span class="params">target, key, val, receiver</span>) &#123;</span><br><span class="line">        <span class="comment">// when setting a property that doesn&#x27;t exist on current scope,</span></span><br><span class="line">        <span class="comment">// do not create it on the current scope and fallback to parent scope.</span></span><br><span class="line">        <span class="keyword">if</span> (receiver === reactiveProxy &amp;&amp; !target.<span class="title function_">hasOwnProperty</span>(key)) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title class_">Reflect</span>.<span class="title function_">set</span>(parentScope, key, val)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Reflect</span>.<span class="title function_">set</span>(target, key, val, receiver)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  )</span><br><span class="line"></span><br><span class="line">  <span class="title function_">bindContextMethods</span>(reactiveProxy)</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    ...ctx,</span><br><span class="line">    <span class="attr">scope</span>: reactiveProxy</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，直接将原<code>ctx</code>对象复制了一份，与<code>v-scope</code>属性值合并。<br>
+然后重新<code>Proxy</code>。<br>
+最后使用<code>bindContextMethods</code>进行了函数绑定。</p>
+<h2 id="bindcontextmethods"><a class="header-anchor" href="#bindcontextmethods">#</a>bindContextMethods</h2>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">bindContextMethods</span> = (<span class="params">scope: Record&lt;<span class="built_in">string</span>, <span class="built_in">any</span>&gt;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">of</span> <span class="title class_">Object</span>.<span class="title function_">keys</span>(scope)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> scope[key] === <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">      scope[key] = scope[key].<span class="title function_">bind</span>(scope)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重新进行函数绑定。</p>
+<h1 id="其他"><a class="header-anchor" href="#其他">#</a>其他</h1>
+<h2 id="eval-ts"><a class="header-anchor" href="#eval-ts">#</a>eval.ts</h2>
+<p>进行属性值表达式处理。</p>
+<h2 id="scheduler-ts"><a class="header-anchor" href="#scheduler-ts">#</a>scheduler.ts</h2>
+<p><code>nextTick</code>，用于响应式处理延迟的。<br>
+<code>queueJob</code>，任务队列。好像用到了<code>ctx</code>的<code>efftct</code>上？<br>
+<code>flushJobs</code>，运行任务队列。</p>
+<h2 id="utils-ts"><a class="header-anchor" href="#utils-ts">#</a>utils.ts</h2>
+<p><code>checkAttr</code>，获得属性值，并清除属性。<br>
+<code>listen</code>，事件绑定？</p>
+
+
+
+            </div>
+            
+<nav class="post-nav">
+  
+
+  
+    <div class="waves-block waves-effect next fr">
+      <a href="/2022/12/13/petite-vue-learn-1/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">petite-vue学习记录1</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+            
+            
+        </div>
+    </div>
+</article>
+
+    </div>
+  </main>
+<div class="mask" id="mask"></div>
+<a href="#top" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<script type="text/template" id="search-tpl">
+<li class="item">
+    <a href="/{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</script>
+
+
+<script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

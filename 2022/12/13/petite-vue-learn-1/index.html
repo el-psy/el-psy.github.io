@@ -1,0 +1,305 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>petite-vue学习记录1 | 七翼式 | 不对称</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="theme-color" content="#3F51B5">
+  
+  
+  <meta name="keywords" content="前端,框架,petite-vue">
+  <meta name="description" content="#起源 摸鱼中。摸到了petite-vue。 #总览 也就petite-vue github了。 并没有找到文档什么的。 或许有csdn或者简书之类的blog写点东西？ #1. 引入 直接cdn引入，或者script标签引入代码。 好像vite有个社区模板？ 并没有见过vite这类前端构建工具使用petite-vue。 #2. 引入了什么？ 假设使用如下方式引入 1&lt;script src&#x3D;&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="petite-vue学习记录1">
+<meta property="og:url" content="http://localhost:5000/2022/12/13/petite-vue-learn-1/index.html">
+<meta property="og:site_name" content="七翼式">
+<meta property="og:description" content="#起源 摸鱼中。摸到了petite-vue。 #总览 也就petite-vue github了。 并没有找到文档什么的。 或许有csdn或者简书之类的blog写点东西？ #1. 引入 直接cdn引入，或者script标签引入代码。 好像vite有个社区模板？ 并没有见过vite这类前端构建工具使用petite-vue。 #2. 引入了什么？ 假设使用如下方式引入 1&lt;script src&#x3D;&amp;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-13T02:52:17.000Z">
+<meta property="article:modified_time" content="2022-12-13T16:16:16.000Z">
+<meta property="article:author" content="el_psy">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="框架">
+<meta property="article:tag" content="petite-vue">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternative" href="/atom.xml" title="七翼式" type="application/atom+xml">
+  
+  <meta name="summary" content="">
+  <link rel="shortcut icon" href="/favicon/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head>
+
+<body>
+  <div id="loading" class="active"></div>
+
+  <nav id="menu" class="hide" >
+   <div class="inner flex-row-vertical">
+  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+      <i class="icon icon-lg icon-close"></i>
+  </a>
+  <div class="brand-wrap">
+    <div class="brand">
+      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
+      <hgroup class="introduce">
+        <h5 class="nickname">el_psy</h5>
+        <a href="mailto:gaojingjingjing@outlook.com" title="gaojingjingjing@outlook.com" class="mail">gaojingjingjing@outlook.com</a>
+      </hgroup>
+    </div>
+  </div>
+  <div class="scroll-wrap flex-col">
+    <ul class="nav">
+      
+          <li class="waves-block waves-effect">
+            <a href="/"  >
+              <i class="icon icon-lg icon-home"></i>
+              主页
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/archives"  >
+              <i class="icon icon-lg icon-archives"></i>
+              archives
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/categories"  >
+              <i class="icon icon-lg icon-th-list"></i>
+              categories
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/tags"  >
+              <i class="icon icon-lg icon-tags"></i>
+              Tags
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="https://github.com/el-psy" target="_blank" >
+              <i class="icon icon-lg icon-github"></i>
+              Github
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/404"  >
+              <i class="icon icon-lg icon-link"></i>
+              测试
+            </a>
+          </li>
+      
+    </ul>
+
+    <footer class="footer">
+  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
+  <p>七翼式 &copy; 2022</p>
+  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
+  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
+</footer>
+
+  </div>
+</div>
+
+  </nav>
+  <main id="main">
+    <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">petite-vue学习记录1</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header">
+  <div class="container">
+    <h1 class="author">petite-vue学习记录1</h1>
+    <h5 class="subtitle">
+        
+            <time datetime="2022-12-13T02:52:17.000Z" itemprop="datePublished" class="page-time">
+  2022-12-13
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/%E6%A1%86%E6%9E%B6/">框架</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/%E6%A1%86%E6%9E%B6/petite-vue/">petite-vue</a></li></ul></li></ul></li></ul>
+
+        
+    </h5>
+  </div>
+</header>
+
+    <div class="container body-wrap">
+      <article id="post-petite-vue-learn-1" 
+  class="article article-type-post" itemprop="blogPost">
+    <div class="post-meta flex-row">
+        
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/petite-vue/" rel="tag">petite-vue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag">框架</a></li></ul>
+
+    </div>
+    <div class="post-body">
+        <aside class="post-widget" id="post-widget">
+
+            
+            <nav class="post-toc-wrap" id="post-toc">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E8%B5%B7%E6%BA%90"><span class="post-toc-number">1.</span> <span class="post-toc-text">起源</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E6%80%BB%E8%A7%88"><span class="post-toc-number">2.</span> <span class="post-toc-text">总览</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-%E5%BC%95%E5%85%A5"><span class="post-toc-number">3.</span> <span class="post-toc-text">1. 引入</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-%E5%BC%95%E5%85%A5%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="post-toc-number">4.</span> <span class="post-toc-text">2. 引入了什么？</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-createapp"><span class="post-toc-number">5.</span> <span class="post-toc-text">3. createApp</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#4-%E6%8C%87%E4%BB%A4"><span class="post-toc-number">6.</span> <span class="post-toc-text">4. 指令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#v-effect"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">v-effect</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#5-%E5%85%B6%E4%BB%96"><span class="post-toc-number">7.</span> <span class="post-toc-text">5. 其他</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#v-scope"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">v-scope</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vue-mounted-vue-unmounted"><span class="post-toc-number">7.2.</span> <span class="post-toc-text">@vue:mounted @vue:unmounted</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%AE%9A%E5%88%B6%E6%8C%87%E4%BB%A4"><span class="post-toc-number">7.3.</span> <span class="post-toc-text">定制指令</span></a></li></ol></li></ol>
+            </nav>
+            
+        </aside>
+
+        <div class="post-main">
+
+            <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="起源"><a class="header-anchor" href="#起源">#</a>起源</h1>
+<p>摸鱼中。摸到了<code>petite-vue</code>。</p>
+<h1 id="总览"><a class="header-anchor" href="#总览">#</a>总览</h1>
+<p>也就<a target="_blank" rel="noopener" href="https://github.com/vuejs/petite-vue">petite-vue github</a>了。<br>
+并没有找到文档什么的。<br>
+或许有csdn或者简书之类的blog写点东西？</p>
+<h1 id="1-引入"><a class="header-anchor" href="#1-引入">#</a>1. 引入</h1>
+<p>直接cdn引入，或者script标签引入代码。<br>
+好像vite有个社区模板？<br>
+并没有见过vite这类前端构建工具使用<code>petite-vue</code>。</p>
+<h1 id="2-引入了什么？"><a class="header-anchor" href="#2-引入了什么？">#</a>2. 引入了什么？</h1>
+<p>假设使用如下方式引入</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://unpkg.com/petite-vue&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>会产生一个<code>PetiteVue</code>变量。<br>
+之下有<code>createApp</code>，<code>nextTick</code>，<code>reactive</code>3个属性。<br>
+然后还会默认运行一段代码</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> s = <span class="variable language_">document</span>.<span class="property">currentScript</span></span><br><span class="line"><span class="keyword">if</span> (s &amp;&amp; s.<span class="title function_">hasAttribute</span>(<span class="string">&#x27;init&#x27;</span>)) &#123;</span><br><span class="line">  <span class="title function_">createApp</span>().<span class="title function_">mount</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>即引入<code>PetiteVue</code>时，标签加了<code>init</code>属性会将<code>createApp</code>挂载在全局上。</p>
+<h1 id="3-createapp"><a class="header-anchor" href="#3-createapp">#</a>3. createApp</h1>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">createApp = <span class="keyword">function</span>(<span class="params">initialData</span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">		<span class="title function_">directive</span>(<span class="params">name, def?</span>)&#123;&#125;,</span><br><span class="line">		<span class="title function_">mount</span>(<span class="params">el? </span>)&#123;&#125;,</span><br><span class="line">		<span class="title function_">unmount</span>(<span class="params"></span>)&#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>createApp</code>差不多就是这个结构。<br>
+<code>initialData</code>中就是各种属性和函数，通过<code>@vue/reactivity</code>中的<code>reactive</code>变成响应式的，存放在<code>ctx.scope</code>。<br>
+<code>mount</code>的<code>el</code>是可选参数。如果为空，则默认为全局。在挂载过程中，通过<code>document.querySelector(el)</code>获取根dom节点，然后检查下面有<code>v-scope</code>的dom节点，作为接下来的输入，也就是真正响应式发生作用的范围。</p>
+<p><code>initialData</code>也可以写成<code>vue</code>中<code>data</code>的样式，写成一个返回对象的函数。<br>
+然后在<code>v-scope</code>的属性值中调用函数，进行初始化。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;module&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">import</span> &#123; createApp &#125; <span class="keyword">from</span> <span class="string">&#x27;https://unpkg.com/petite-vue?module&#x27;</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params">props</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">count</span>: props.<span class="property">initialCount</span>,</span></span><br><span class="line"><span class="language-javascript">      <span class="title function_">inc</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">count</span>++</span></span><br><span class="line"><span class="language-javascript">      &#125;,</span></span><br><span class="line"><span class="language-javascript">      <span class="title function_">mounted</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`I&#x27;m mounted!`</span>)</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">createApp</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title class_">Counter</span></span></span><br><span class="line"><span class="language-javascript">  &#125;).<span class="title function_">mount</span>()</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-scope</span>=<span class="string">&quot;Counter(&#123; initialCount: 1 &#125;)&quot;</span> @<span class="attr">vue:mounted</span>=<span class="string">&quot;mounted&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; count &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">&quot;inc&quot;</span>&gt;</span>increment<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-scope</span>=<span class="string">&quot;Counter(&#123; initialCount: 2 &#125;)&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; count &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">&quot;inc&quot;</span>&gt;</span>increment<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="4-指令"><a class="header-anchor" href="#4-指令">#</a>4. 指令</h1>
+<p>指令列表</p>
+<ol>
+<li>v-bind</li>
+<li>v-effect</li>
+<li>v-for</li>
+<li>v-html</li>
+<li>v-if v-else v-else-if</li>
+<li>v-model</li>
+<li>v-on</li>
+<li>v-ref</li>
+<li>v-show</li>
+<li>v-text</li>
+</ol>
+<h2 id="v-effect"><a class="header-anchor" href="#v-effect">#</a>v-effect</h2>
+<p>行内执行响应式代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-scope</span>=<span class="string">&quot;&#123; count: 0 &#125;&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">v-effect</span>=<span class="string">&quot;$el.textContent = count&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">&quot;count++&quot;</span>&gt;</span>++<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="5-其他"><a class="header-anchor" href="#5-其他">#</a>5. 其他</h1>
+<h2 id="v-scope"><a class="header-anchor" href="#v-scope">#</a>v-scope</h2>
+<p>它是根。<code>petite-vue</code>以它所在dom节点作为根。<br>
+后面的属性值应返回一个对象。<br>
+和根的<code>ctx.scope</code>合并作为根下的响应式对象。</p>
+<h2 id="vue-mounted-vue-unmounted"><a class="header-anchor" href="#vue-mounted-vue-unmounted">#</a>@vue:mounted @vue:unmounted</h2>
+<p>在app挂载和卸载是执行的行内语句。</p>
+<h2 id="定制指令"><a class="header-anchor" href="#定制指令">#</a>定制指令</h2>
+<p>我也不是很懂。<br>
+所以复制粘贴大法。<br>
+来自<a target="_blank" rel="noopener" href="https://github.com/vuejs/petite-vue">petite-vue github</a>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">myDirective</span> = (<span class="params">ctx</span>) =&gt; &#123;</span><br><span class="line">  <span class="comment">// the element the directive is on</span></span><br><span class="line">  ctx.<span class="property">el</span></span><br><span class="line">  <span class="comment">// the raw value expression</span></span><br><span class="line">  <span class="comment">// e.g. v-my-dir=&quot;x&quot; then this would be &quot;x&quot;</span></span><br><span class="line">  ctx.<span class="property">exp</span></span><br><span class="line">  <span class="comment">// v-my-dir:foo -&gt; &quot;foo&quot;</span></span><br><span class="line">  ctx.<span class="property">arg</span></span><br><span class="line">  <span class="comment">// v-my-dir.mod -&gt; &#123; mod: true &#125;</span></span><br><span class="line">  ctx.<span class="property">modifiers</span></span><br><span class="line">  <span class="comment">// evaluate the expression and get its value</span></span><br><span class="line">  ctx.<span class="title function_">get</span>()</span><br><span class="line">  <span class="comment">// evaluate arbitrary expression in current scope</span></span><br><span class="line">  ctx.<span class="title function_">get</span>(<span class="string">`<span class="subst">$&#123;ctx.exp&#125;</span> + 10`</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// run reactive effect</span></span><br><span class="line">  ctx.<span class="title function_">effect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// this will re-run every time the get() value changes</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(ctx.<span class="title function_">get</span>())</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// cleanup if the element is unmounted</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// register the directive</span></span><br><span class="line"><span class="title function_">createApp</span>().<span class="title function_">directive</span>(<span class="string">&#x27;my-dir&#x27;</span>, myDirective).<span class="title function_">mount</span>()</span><br></pre></td></tr></table></figure>
+
+
+            </div>
+            
+<nav class="post-nav">
+  
+    <div class="waves-block waves-effect prev fl">
+      <a href="/2022/12/14/petite-vue-learn-2/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">petite-vue学习记录2</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next fr">
+      <a href="/2022/12/12/flask-self-1/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">flask记录-1</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+            
+            
+        </div>
+    </div>
+</article>
+
+    </div>
+  </main>
+<div class="mask" id="mask"></div>
+<a href="#top" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<script type="text/template" id="search-tpl">
+<li class="item">
+    <a href="/{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</script>
+
+
+<script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
