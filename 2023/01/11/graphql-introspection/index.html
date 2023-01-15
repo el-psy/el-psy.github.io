@@ -1,0 +1,589 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>graphql-introspection | 七翼式 | 不对称</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="theme-color" content="#3F51B5">
+  
+  
+  <meta name="keywords" content="graphql">
+  <meta name="description" content="Introspection翻译  向GraphQL模式询问有关其支持的查询的信息通常非常有用。GraphQL允许我们使用introspection系统这样做。 对于我们的《星球大战》示例，文件starWarsIntrossection-test.ts包含很多演示introspection系统的查询，并且是一个测试用例文件，可以运行该文件来练习参考实现的introspection系统。 我们设计了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="graphql-introspection">
+<meta property="og:url" content="http://localhost:5000/2023/01/11/graphql-introspection/index.html">
+<meta property="og:site_name" content="七翼式">
+<meta property="og:description" content="Introspection翻译  向GraphQL模式询问有关其支持的查询的信息通常非常有用。GraphQL允许我们使用introspection系统这样做。 对于我们的《星球大战》示例，文件starWarsIntrossection-test.ts包含很多演示introspection系统的查询，并且是一个测试用例文件，可以运行该文件来练习参考实现的introspection系统。 我们设计了">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-01-11T06:55:18.000Z">
+<meta property="article:modified_time" content="2023-01-11T07:50:52.000Z">
+<meta property="article:author" content="el_psy">
+<meta property="article:tag" content="graphql">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternative" href="/atom.xml" title="七翼式" type="application/atom+xml">
+  
+  <meta name="summary" content="">
+  <link rel="shortcut icon" href="/favicon/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head>
+
+<body>
+  <div id="loading" class="active"></div>
+
+  <nav id="menu" class="hide" >
+   <div class="inner flex-row-vertical">
+  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+      <i class="icon icon-lg icon-close"></i>
+  </a>
+  <div class="brand-wrap">
+    <div class="brand">
+      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
+      <hgroup class="introduce">
+        <h5 class="nickname">el_psy</h5>
+        <a href="mailto:gaojingjingjing@outlook.com" title="gaojingjingjing@outlook.com" class="mail">gaojingjingjing@outlook.com</a>
+      </hgroup>
+    </div>
+  </div>
+  <div class="scroll-wrap flex-col">
+    <ul class="nav">
+      
+          <li class="waves-block waves-effect">
+            <a href="/"  >
+              <i class="icon icon-lg icon-home"></i>
+              主页
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/archives"  >
+              <i class="icon icon-lg icon-archives"></i>
+              archives
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/categories"  >
+              <i class="icon icon-lg icon-th-list"></i>
+              categories
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/tags"  >
+              <i class="icon icon-lg icon-tags"></i>
+              Tags
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="https://github.com/el-psy" target="_blank" >
+              <i class="icon icon-lg icon-github"></i>
+              Github
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/404"  >
+              <i class="icon icon-lg icon-link"></i>
+              测试
+            </a>
+          </li>
+      
+    </ul>
+
+    <footer class="footer">
+  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
+  <p>七翼式 &copy; 2023</p>
+  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
+  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
+</footer>
+
+  </div>
+</div>
+
+  </nav>
+  <main id="main">
+    <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">graphql-introspection</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header">
+  <div class="container">
+    <h1 class="author">graphql-introspection</h1>
+    <h5 class="subtitle">
+        
+            <time datetime="2023-01-11T06:55:18.000Z" itemprop="datePublished" class="page-time">
+  2023-01-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/graphql/">graphql</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/graphql/introspection/">introspection</a></li></ul></li></ul>
+
+        
+    </h5>
+  </div>
+</header>
+
+    <div class="container body-wrap">
+      <article id="post-graphql-introspection" 
+  class="article article-type-post" itemprop="blogPost">
+    <div class="post-meta flex-row">
+        
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/graphql/" rel="tag">graphql</a></li></ul>
+
+    </div>
+    <div class="post-body">
+        <aside class="post-widget" id="post-widget">
+
+            
+            <nav class="post-toc-wrap" id="post-toc">
+            
+            </nav>
+            
+        </aside>
+
+        <div class="post-main">
+
+            <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p><a target="_blank" rel="noopener" href="https://graphql.org/learn/introspection/">Introspection</a>翻译</p>
+</blockquote>
+<p>向GraphQL模式询问有关其支持的查询的信息通常非常有用。GraphQL允许我们使用introspection系统这样做。</p>
+<p>对于我们的《星球大战》示例，文件<a target="_blank" rel="noopener" href="https://github.com/graphql/graphql-js/blob/main/src/__tests__/starWarsIntrospection-test.ts">starWarsIntrossection-test.ts</a>包含很多演示introspection系统的查询，并且是一个测试用例文件，可以运行该文件来练习参考实现的introspection系统。</p>
+<p>我们设计了类型系统，所以我们知道哪些类型是可用的。但如果我们不知道，则可以通过查询<code>__schema</code>字段来询问GraphQL，该字段在查询的根类型上总是可用的。现在让我们这么做，并询问可用的类型。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token object">__schema</span> <span class="token punctuation">&#123;</span>
+    <span class="token object">types</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"__schema"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"types"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Query"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"String"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"ID"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Mutation"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Episode"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Character"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Int"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"LengthUnit"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Human"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Float"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Droid"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"FriendsConnection"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"FriendsEdge"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"PageInfo"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Boolean"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Review"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"ReviewInput"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Starship"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"SearchResult"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"__Schema"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"__Type"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"__TypeKind"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"__Field"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"__InputValue"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"__EnumValue"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"__Directive"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"__DirectiveLocation"</span>
+        <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>哦，有个类型海。它们都是什么水？让我们将它们分组：</p>
+<ul>
+<li>
+<p><code>Query, Character, Human, Episode, Droid</code>——这些是我们在类型系统中定义的。</p>
+</li>
+<li>
+<p><code>String, Boolean</code>——这些事类型系统提供的内建标量。</p>
+</li>
+<li>
+<p><code>__Schema, __Type, __TypeKind, __Field, __InputValue, __EnumValue, __Directive</code>——这些都以双下划线开头，表示它们是内建系统的一部分。</p>
+</li>
+</ul>
+<p>现在，让我们试着找出一个好方法，开始探索可用的查询。当我们设计类型系统时，我们指定了多有查询的起始类型；让我们问问内省系统吧！</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token object">__schema</span> <span class="token punctuation">&#123;</span>
+    <span class="token object">queryType</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"__schema"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"queryType"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Query"</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这与我们在类型系统中说的一致，查询类型是我们将开始的地方。注意这里的命名只是按照管理；我们可以将我们的查询类型命名为任何其他类型，如果我们将其指定为查询的起始类型，它仍然会返回到这里。不过，将其命名为<code>Query</code>是一个有用的约定。</p>
+<p>检查一个特定的类型通常很有用。让我们看看<code>Droid</code>类型。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token property-query">__type</span><span class="token punctuation">(</span><span class="token attr-name">name</span><span class="token punctuation">:</span> <span class="token string">"Droid"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"__type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Droid"</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>不过，如果我们想了解更多<code>Droid</code>的信息呢？例如，它是接口还是对象？</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token property-query">__type</span><span class="token punctuation">(</span><span class="token attr-name">name</span><span class="token punctuation">:</span> <span class="token string">"Droid"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token property">kind</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"__type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Droid"</span><span class="token punctuation">,</span>
+      <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"OBJECT"</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>kind</code>返回一个<code>__TypeKind</code>枚举类型，其中一个值是<code>OBJECT</code>.如果我们询问<code>Character</code>，我们会发现它是一个接口：</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token property-query">__type</span><span class="token punctuation">(</span><span class="token attr-name">name</span><span class="token punctuation">:</span> <span class="token string">"Character"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token property">kind</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"__type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Character"</span><span class="token punctuation">,</span>
+      <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"INTERFACE"</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>对于一个对象知道它有什么字段是很有用的，所以让我们问问<code>Droid</code>的introspection系统：</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token property-query">__type</span><span class="token punctuation">(</span><span class="token attr-name">name</span><span class="token punctuation">:</span> <span class="token string">"Droid"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token object">fields</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+      <span class="token keyword">type</span> <span class="token punctuation">&#123;</span>
+        <span class="token property">name</span>
+        <span class="token property">kind</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"__type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Droid"</span><span class="token punctuation">,</span>
+      <span class="token property">"fields"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"id"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"NON_NULL"</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"name"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"NON_NULL"</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"friends"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"LIST"</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"friendsConnection"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"NON_NULL"</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"appearsIn"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"NON_NULL"</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"primaryFunction"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"String"</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"SCALAR"</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这些就是我们在<code>Droid</code>上定义的字段。</p>
+<p><code>id</code>看起来有点奇怪，它没有类型的名称。这是因为它是<code>NON_NULL</code>类型的包装类型。如果我们在该字段的类型上查询<code>type</code>，我们将在哪里找到<code>ID</code>类型，并告诉我们这是一个非空<code>ID</code>。</p>
+<p>同样，<code>friends</code>和<code>appearsln</code>上都没有<code>name</code>，因为它们是<code>LIST</code>包装类型。我们可以在这里类型上查询<code>type</code>，这将告诉我们这些是什么列表。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token property-query">__type</span><span class="token punctuation">(</span><span class="token attr-name">name</span><span class="token punctuation">:</span> <span class="token string">"Droid"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token object">fields</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+      <span class="token keyword">type</span> <span class="token punctuation">&#123;</span>
+        <span class="token property">name</span>
+        <span class="token property">kind</span>
+        <span class="token object">ofType</span> <span class="token punctuation">&#123;</span>
+          <span class="token property">name</span>
+          <span class="token property">kind</span>
+        <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"__type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Droid"</span><span class="token punctuation">,</span>
+      <span class="token property">"fields"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"id"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"NON_NULL"</span><span class="token punctuation">,</span>
+            <span class="token property">"ofType"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"ID"</span><span class="token punctuation">,</span>
+              <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"SCALAR"</span>
+            <span class="token punctuation">&#125;</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"name"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"NON_NULL"</span><span class="token punctuation">,</span>
+            <span class="token property">"ofType"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"String"</span><span class="token punctuation">,</span>
+              <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"SCALAR"</span>
+            <span class="token punctuation">&#125;</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"friends"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"LIST"</span><span class="token punctuation">,</span>
+            <span class="token property">"ofType"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Character"</span><span class="token punctuation">,</span>
+              <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"INTERFACE"</span>
+            <span class="token punctuation">&#125;</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"friendsConnection"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"NON_NULL"</span><span class="token punctuation">,</span>
+            <span class="token property">"ofType"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"FriendsConnection"</span><span class="token punctuation">,</span>
+              <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"OBJECT"</span>
+            <span class="token punctuation">&#125;</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"appearsIn"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"NON_NULL"</span><span class="token punctuation">,</span>
+            <span class="token property">"ofType"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+              <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"LIST"</span>
+            <span class="token punctuation">&#125;</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"primaryFunction"</span><span class="token punctuation">,</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"String"</span><span class="token punctuation">,</span>
+            <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"SCALAR"</span><span class="token punctuation">,</span>
+            <span class="token property">"ofType"</span><span class="token operator">:</span> <span class="token null keyword">null</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>让我们对特别有用的introspection的一个特性作为结尾；让我们向系统索取文档！</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token property-query">__type</span><span class="token punctuation">(</span><span class="token attr-name">name</span><span class="token punctuation">:</span> <span class="token string">"Droid"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token property">description</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"__type"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Droid"</span><span class="token punctuation">,</span>
+      <span class="token property">"description"</span><span class="token operator">:</span> <span class="token null keyword">null</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>因此，我们可以使用introspection系统来访问有关类型系统的文档，并创建文档浏览器，或丰富的IDE体验。</p>
+<p>这只是触及了introspection系统的表面，我们可以查询枚举值、类型实现的接口等。我们甚至可以introspection  introspection系统本身。规范在<a target="_blank" rel="noopener" href="https://github.com/graphql/graphql-js/blob/main/src/type/introspection.ts">introspection</a>一节中详细介绍，GraphQL.js中的introspection文件包含实现符合规范的GraphQL查询introspection系统的代码。</p>
+
+
+
+            </div>
+            
+<nav class="post-nav">
+  
+
+  
+    <div class="waves-block waves-effect next fr">
+      <a href="/2023/01/11/graphql-execution/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">graphql-execution</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+            
+            
+        </div>
+    </div>
+</article>
+
+    </div>
+  </main>
+<div class="mask" id="mask"></div>
+<a href="#top" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<script type="text/template" id="search-tpl">
+<li class="item">
+    <a href="/{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</script>
+
+
+<script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

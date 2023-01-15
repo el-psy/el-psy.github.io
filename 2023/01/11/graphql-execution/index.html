@@ -1,0 +1,373 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>graphql-execution | 七翼式 | 不对称</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="theme-color" content="#3F51B5">
+  
+  
+  <meta name="keywords" content="graphql">
+  <meta name="description" content="Execution翻译  经过验证后，GraphQL查询由GraphQL服务器执行，该服务器返回一个反映所请求查询形状的结果，通常为JSON。 GraphQL无法在没有类型系统的情况下执行查询，让我们使用一个示例类型系统来说明执行查询。这是本文示例中使用的同一类型系统的一部分： type Query &amp;#123;   human(id: ID!): Human &amp;#125;  type Huma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="graphql-execution">
+<meta property="og:url" content="http://localhost:5000/2023/01/11/graphql-execution/index.html">
+<meta property="og:site_name" content="七翼式">
+<meta property="og:description" content="Execution翻译  经过验证后，GraphQL查询由GraphQL服务器执行，该服务器返回一个反映所请求查询形状的结果，通常为JSON。 GraphQL无法在没有类型系统的情况下执行查询，让我们使用一个示例类型系统来说明执行查询。这是本文示例中使用的同一类型系统的一部分： type Query &amp;#123;   human(id: ID!): Human &amp;#125;  type Huma">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-01-11T04:49:52.000Z">
+<meta property="article:modified_time" content="2023-01-11T06:08:56.000Z">
+<meta property="article:author" content="el_psy">
+<meta property="article:tag" content="graphql">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternative" href="/atom.xml" title="七翼式" type="application/atom+xml">
+  
+  <meta name="summary" content="">
+  <link rel="shortcut icon" href="/favicon/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head>
+
+<body>
+  <div id="loading" class="active"></div>
+
+  <nav id="menu" class="hide" >
+   <div class="inner flex-row-vertical">
+  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+      <i class="icon icon-lg icon-close"></i>
+  </a>
+  <div class="brand-wrap">
+    <div class="brand">
+      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
+      <hgroup class="introduce">
+        <h5 class="nickname">el_psy</h5>
+        <a href="mailto:gaojingjingjing@outlook.com" title="gaojingjingjing@outlook.com" class="mail">gaojingjingjing@outlook.com</a>
+      </hgroup>
+    </div>
+  </div>
+  <div class="scroll-wrap flex-col">
+    <ul class="nav">
+      
+          <li class="waves-block waves-effect">
+            <a href="/"  >
+              <i class="icon icon-lg icon-home"></i>
+              主页
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/archives"  >
+              <i class="icon icon-lg icon-archives"></i>
+              archives
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/categories"  >
+              <i class="icon icon-lg icon-th-list"></i>
+              categories
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/tags"  >
+              <i class="icon icon-lg icon-tags"></i>
+              Tags
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="https://github.com/el-psy" target="_blank" >
+              <i class="icon icon-lg icon-github"></i>
+              Github
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/404"  >
+              <i class="icon icon-lg icon-link"></i>
+              测试
+            </a>
+          </li>
+      
+    </ul>
+
+    <footer class="footer">
+  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
+  <p>七翼式 &copy; 2023</p>
+  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
+  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
+</footer>
+
+  </div>
+</div>
+
+  </nav>
+  <main id="main">
+    <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">graphql-execution</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header">
+  <div class="container">
+    <h1 class="author">graphql-execution</h1>
+    <h5 class="subtitle">
+        
+            <time datetime="2023-01-11T04:49:52.000Z" itemprop="datePublished" class="page-time">
+  2023-01-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/graphql/">graphql</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/graphql/execution/">execution</a></li></ul></li></ul>
+
+        
+    </h5>
+  </div>
+</header>
+
+    <div class="container body-wrap">
+      <article id="post-graphql-execution" 
+  class="article article-type-post" itemprop="blogPost">
+    <div class="post-meta flex-row">
+        
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/graphql/" rel="tag">graphql</a></li></ul>
+
+    </div>
+    <div class="post-body">
+        <aside class="post-widget" id="post-widget">
+
+            
+            <nav class="post-toc-wrap" id="post-toc">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#root-fields-resolvers-%E8%B7%9F%E5%AD%97%E6%AE%B5%E5%92%8C%E8%A7%A3%E6%9E%90%E5%99%A8"><span class="post-toc-number">1.</span> <span class="post-toc-text">Root fields &amp; resolvers 跟字段和解析器</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#asynchronous-resolvers-%E5%BC%82%E6%AD%A5%E8%A7%A3%E6%9E%90%E5%99%A8"><span class="post-toc-number">2.</span> <span class="post-toc-text">Asynchronous resolvers 异步解析器</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#trivial-resolvers-%E7%AE%80%E5%8D%95%E8%A7%A3%E6%9E%90%E5%99%A8"><span class="post-toc-number">3.</span> <span class="post-toc-text">Trivial resolvers 简单解析器</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#scalar-coercion-%E6%A0%87%E9%87%8F%E5%BC%BA%E5%88%B6"><span class="post-toc-number">4.</span> <span class="post-toc-text">Scalar coercion 标量强制</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#list-resolvers-%E5%88%97%E8%A1%A8%E8%A7%A3%E6%9E%90%E5%99%A8"><span class="post-toc-number">5.</span> <span class="post-toc-text">List resolvers 列表解析器</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#producing-the-result-%E7%94%9F%E6%88%90%E7%BB%93%E6%9E%9C"><span class="post-toc-number">6.</span> <span class="post-toc-text">Producing the result 生成结果</span></a></li></ol>
+            </nav>
+            
+        </aside>
+
+        <div class="post-main">
+
+            <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p><a target="_blank" rel="noopener" href="https://graphql.org/learn/execution/">Execution</a>翻译</p>
+</blockquote>
+<p>经过验证后，GraphQL查询由GraphQL服务器执行，该服务器返回一个反映所请求查询形状的结果，通常为JSON。</p>
+<p>GraphQL无法在没有类型系统的情况下执行查询，让我们使用一个示例类型系统来说明执行查询。这是本文示例中使用的同一类型系统的一部分：</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token keyword">type</span> <span class="token class-name">Query</span> <span class="token punctuation">&#123;</span>
+  <span class="token attr-name">human</span><span class="token punctuation">(</span><span class="token attr-name">id</span><span class="token punctuation">:</span> <span class="token scalar">ID</span><span class="token operator">!</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token class-name">Human</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">type</span> <span class="token class-name">Human</span> <span class="token punctuation">&#123;</span>
+  <span class="token attr-name">name</span><span class="token punctuation">:</span> <span class="token scalar">String</span>
+  <span class="token attr-name">appearsIn</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token class-name">Episode</span><span class="token punctuation">]</span>
+  <span class="token attr-name">starships</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token class-name">Starship</span><span class="token punctuation">]</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">enum</span> <span class="token class-name">Episode</span> <span class="token punctuation">&#123;</span>
+  <span class="token constant">NEWHOPE</span>
+  <span class="token constant">EMPIRE</span>
+  <span class="token constant">JEDI</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">type</span> <span class="token class-name">Starship</span> <span class="token punctuation">&#123;</span>
+  <span class="token attr-name">name</span><span class="token punctuation">:</span> <span class="token scalar">String</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>为了描述执行查询时发生的情况，让我们使用一个示例来了解一下。</p>
+<p>你可以将GraphQL查询中的每个字段视为返回下一个类型的前一个类型的函数或方法。事实上，这正是GraphQL的工作原理。每种类型上的每个字段都由GraphQL服务器开发人员提供的名为解析器的函数支持。每当执行一个字段时，将调用相应的解析器来说生成下一个值。</p>
+<p>如果一个字段产生一个标量值，如字符串或数字，则执行完成。但是，如果字段产生对象值，则查询将包含应用该对象的另一个字段选择。浙江一直持续达到标量值。GraphQL查询始终以标量值结尾。</p>
+<h1 id="root-fields-resolvers-跟字段和解析器"><a class="header-anchor" href="#root-fields-resolvers-跟字段和解析器">#</a>Root fields &amp; resolvers 跟字段和解析器</h1>
+<p>在每个GraphQL服务器的顶层都有一种类型，它表示GraphQL API的所有可能入口，通常成为根类型或查询类型。</p>
+<p>在本例中，我们的查询类型提供了一个名为<code>human</code>的字段，该字段接收参数id。该字段的解析器函数可能访问数据库，然后构造并返回一个<code>human</code>对象。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token attr-name">Query</span><span class="token punctuation">:</span> <span class="token punctuation">&#123;</span>
+  <span class="token property-query">human</span><span class="token punctuation">(</span><span class="token property">obj</span><span class="token punctuation">,</span> <span class="token property">args</span><span class="token punctuation">,</span> <span class="token property">context</span><span class="token punctuation">,</span> <span class="token property">info</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">return</span> <span class="token property">context</span>.<span class="token property">db</span>.<span class="token property-query">loadHumanByID</span><span class="token punctuation">(</span><span class="token property">args</span>.<span class="token property">id</span><span class="token punctuation">)</span>.<span class="token property-query">then</span><span class="token punctuation">(</span>
+      <span class="token property">userData</span> <span class="token operator">=</span>> <span class="token property">new</span> <span class="token property-query">Human</span><span class="token punctuation">(</span><span class="token property">userData</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这个例子是用JavaScript编写的，但是GraphQL服务器可以用<a target="_blank" rel="noopener" href="https://graphql.org/code/">许多不同的语言</a>构建。解析器函数接收四个参数：</p>
+<ul>
+<li>
+<p>obj 前一对象，在根查询类型上该字段通常不使用。</p>
+</li>
+<li>
+<p>args 为GraphQL查询中的字段提供参数。</p>
+</li>
+<li>
+<p>context 提供给每个解析器的一个值，它保存重要的上下文信息，如当前登录的用户或对数据库的访问。</p>
+</li>
+<li>
+<p>info 保存与当前查询相关的字段特定信息以及模式详细信息的值，详细信息可以查阅<a target="_blank" rel="noopener" href="https://graphql.org/graphql-js/type/#graphqlobjecttype">Graphql解析器info类型的更多细节</a>。</p>
+</li>
+</ul>
+<h1 id="asynchronous-resolvers-异步解析器"><a class="header-anchor" href="#asynchronous-resolvers-异步解析器">#</a>Asynchronous resolvers 异步解析器</h1>
+<p>让我们仔细看看这个解析器函数中发生了什么。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token property-query">human</span><span class="token punctuation">(</span><span class="token property">obj</span><span class="token punctuation">,</span> <span class="token property">args</span><span class="token punctuation">,</span> <span class="token property">context</span><span class="token punctuation">,</span> <span class="token property">info</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">return</span> <span class="token property">context</span>.<span class="token property">db</span>.<span class="token property-query">loadHumanByID</span><span class="token punctuation">(</span><span class="token property">args</span>.<span class="token property">id</span><span class="token punctuation">)</span>.<span class="token property-query">then</span><span class="token punctuation">(</span>
+    <span class="token property">userData</span> <span class="token operator">=</span>> <span class="token property">new</span> <span class="token property-query">Human</span><span class="token punctuation">(</span><span class="token property">userData</span><span class="token punctuation">)</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>context</code>用于提供对数据库的访问，该数据库用于通过在GraphQL查询中作为参数提供的id为用户加载数据。由于从数据库加载是一个异步操作，因此返回Promise。在JavaScript中，Promise用于处理异步值，但在许多语言中都存在相同的概念，通常称为<code>Futures</code>、<code>Task</code>或<code>Deferred</code>。当数据库返回时，我们可以构造并返回一个新的<code>Human</code>对象。</p>
+<p>请注意，虽然解析器函数需要知道Promise，但GraphQL查询不需要。它只希望human字段返回一些东西，然后可以查询器name。在执行过程中，GraphQL将等待<code>Promise</code>、<code>Futures</code>和<code>Tasks</code>完成，然后继续执行，并以最佳并发性执行。</p>
+<h1 id="trivial-resolvers-简单解析器"><a class="header-anchor" href="#trivial-resolvers-简单解析器">#</a>Trivial resolvers 简单解析器</h1>
+<p>既然<code>Human</code>对象可用，GraphQL执行可以继续执行其上请求的字段。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token attr-name">Human</span><span class="token punctuation">:</span> <span class="token punctuation">&#123;</span>
+  <span class="token property-query">name</span><span class="token punctuation">(</span><span class="token property">obj</span><span class="token punctuation">,</span> <span class="token property">args</span><span class="token punctuation">,</span> <span class="token property">context</span><span class="token punctuation">,</span> <span class="token property">info</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">return</span> <span class="token property">obj</span>.<span class="token property">name</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Graphql服务器根据类型系统知道下一步需要做什么。即在<code>Human</code>字段返回任何内容之前，GraphQL知道下一步将是解析<code>Human</code>类型上的字段，因为类型系统告诉它<code>human</code>字段将返回一个<code>Human</code>。</p>
+<p>在这种情况下解析<code>name</code>非常简单。调用<code>name</code>解析器函数，obj参数是从上一个字段返回的新<code>Human</code>对象。在这种情况下，我们希望<code>Human</code>对象具有一个<code>name</code>属性，我们可以直接读取并返回该属性。</p>
+<p>事实上，许多GraphQL库将允许你省略这么简单的解析器，并假设如果没有为字段提供解析器，则将读取并返回同名属性。</p>
+<h1 id="scalar-coercion-标量强制"><a class="header-anchor" href="#scalar-coercion-标量强制">#</a>Scalar coercion 标量强制</h1>
+<p>解析<code>name</code>字段时，可以同时解析<code>appearsln</code>和<code>starships</code>字段。<code>appearsln</code>字段也可能有一个简单的解析器，但让我们仔细看看：</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token attr-name">Human</span><span class="token punctuation">:</span> <span class="token punctuation">&#123;</span>
+  <span class="token property-query">appearsIn</span><span class="token punctuation">(</span><span class="token property">obj</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">return</span> <span class="token property">obj</span>.<span class="token property">appearsIn</span> // <span class="token property">returns</span> <span class="token punctuation">[</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span> <span class="token punctuation">]</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>请注意，我们的类型系统表明<code>appearsln</code>将返回具有已知值的枚举类型，但此函数返回的是数字！事实上，如果我们查看结果，就会看到返回了正确的枚举值。发生了什么事？</p>
+<p>这就是标量强制的一个例子。类型系统知道需要什么，并将解析器函数返回的值转换为支持API约定的值。在这种情况下，我们的服务器上可能定义了一个枚举类型，它在内部使用4、5、6等数字，但在GraphQL类型系统中它们将表示为枚举值。</p>
+<h1 id="list-resolvers-列表解析器"><a class="header-anchor" href="#list-resolvers-列表解析器">#</a>List resolvers 列表解析器</h1>
+<p>我们已经看到了当一个字段返回一个上面的<code>appearsln</code>字段的列表时会发生什么。它返回了一个枚举值列表，因为这是类型系统所期望的，所以列表中的每个值都被强制转换为对应的枚举值。而当<code>starship</code>字段解析时会发生什么？</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token attr-name">Human</span><span class="token punctuation">:</span> <span class="token punctuation">&#123;</span>
+  <span class="token property-query">starships</span><span class="token punctuation">(</span><span class="token property">obj</span><span class="token punctuation">,</span> <span class="token property">args</span><span class="token punctuation">,</span> <span class="token property">context</span><span class="token punctuation">,</span> <span class="token property">info</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">return</span> <span class="token property">obj</span>.<span class="token property">starshipIDs</span>.<span class="token property-query">map</span><span class="token punctuation">(</span>
+      <span class="token property">id</span> <span class="token operator">=</span>> <span class="token property">context</span>.<span class="token property">db</span>.<span class="token property-query">loadStarshipByID</span><span class="token punctuation">(</span><span class="token property">id</span><span class="token punctuation">)</span>.<span class="token property-query">then</span><span class="token punctuation">(</span>
+        <span class="token property">shipData</span> <span class="token operator">=</span>> <span class="token property">new</span> <span class="token property-query">Starship</span><span class="token punctuation">(</span><span class="token property">shipData</span><span class="token punctuation">)</span>
+      <span class="token punctuation">)</span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>此字段的解析器不仅返回一个Promise，还返回了Promise列表。<code>Human</code>对象有它们驾驶的星际飞船的id列表，但我们需要加载所有这些id才能获得真正的<code>Starship</code>对象。</p>
+<p>GraphQL在下一步之前会等待所有这些Promise完成，留下一个对象列表，并将再次同时加载每个项的<code>name</code>字段。</p>
+<h1 id="producing-the-result-生成结果"><a class="header-anchor" href="#producing-the-result-生成结果">#</a>Producing the result 生成结果</h1>
+<p>当每个字段都解析完成，生成的值将被存放到一个键值映射中，字段名（或别名）作为键，解析的值作为值。这从查询的底部的叶节点一直延伸到根查询的原始字段。它们共同生成一个结构，反映了原始查询，然后可以将生成的结构（通常是JSON）发送到请求它的客户端。</p>
+<p>让我们最后看一看原始查询，看看所有这些解析函数是如何产生结果的：</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token property-query">human</span><span class="token punctuation">(</span><span class="token attr-name">id</span><span class="token punctuation">:</span> <span class="token number">1002</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token property">appearsIn</span>
+    <span class="token object">starships</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"human"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Han Solo"</span><span class="token punctuation">,</span>
+      <span class="token property">"appearsIn"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token string">"NEWHOPE"</span><span class="token punctuation">,</span>
+        <span class="token string">"EMPIRE"</span><span class="token punctuation">,</span>
+        <span class="token string">"JEDI"</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"starships"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Millenium Falcon"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Imperial shuttle"</span>
+        <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+            </div>
+            
+<nav class="post-nav">
+  
+    <div class="waves-block waves-effect prev fl">
+      <a href="/2023/01/11/graphql-introspection/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">graphql-introspection</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next fr">
+      <a href="/2023/01/11/graphql-validatoin/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">graphql-validatoin</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+            
+            
+        </div>
+    </div>
+</article>
+
+    </div>
+  </main>
+<div class="mask" id="mask"></div>
+<a href="#top" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<script type="text/template" id="search-tpl">
+<li class="item">
+    <a href="/{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</script>
+
+
+<script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

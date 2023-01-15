@@ -1,0 +1,720 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>graphql-queries-mutations | 七翼式 | 不对称</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="theme-color" content="#3F51B5">
+  
+  
+  <meta name="keywords" content="graphql">
+  <meta name="description" content="Queries and Mutations翻译  在这篇文章里，你会学到如何进行GraphQL的查询的细节。 #Fields 字段 简而言之，GraphQL就是查询对象上的特定字段。让我们从一个非常简单的查询以及运行它的结果开始： &amp;#123;   hero &amp;#123;     name   &amp;#125; &amp;#125; &amp;#123;   &quot;data&quot;: &amp;#123;     &quot;hero&quot;: &amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="graphql-queries-mutations">
+<meta property="og:url" content="http://localhost:5000/2022/12/15/graphql-queries-mutations/index.html">
+<meta property="og:site_name" content="七翼式">
+<meta property="og:description" content="Queries and Mutations翻译  在这篇文章里，你会学到如何进行GraphQL的查询的细节。 #Fields 字段 简而言之，GraphQL就是查询对象上的特定字段。让我们从一个非常简单的查询以及运行它的结果开始： &amp;#123;   hero &amp;#123;     name   &amp;#125; &amp;#125; &amp;#123;   &quot;data&quot;: &amp;#123;     &quot;hero&quot;: &amp;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-15T03:42:35.000Z">
+<meta property="article:modified_time" content="2023-01-09T06:05:54.000Z">
+<meta property="article:author" content="el_psy">
+<meta property="article:tag" content="graphql">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternative" href="/atom.xml" title="七翼式" type="application/atom+xml">
+  
+  <meta name="summary" content="">
+  <link rel="shortcut icon" href="/favicon/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head>
+
+<body>
+  <div id="loading" class="active"></div>
+
+  <nav id="menu" class="hide" >
+   <div class="inner flex-row-vertical">
+  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+      <i class="icon icon-lg icon-close"></i>
+  </a>
+  <div class="brand-wrap">
+    <div class="brand">
+      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
+      <hgroup class="introduce">
+        <h5 class="nickname">el_psy</h5>
+        <a href="mailto:gaojingjingjing@outlook.com" title="gaojingjingjing@outlook.com" class="mail">gaojingjingjing@outlook.com</a>
+      </hgroup>
+    </div>
+  </div>
+  <div class="scroll-wrap flex-col">
+    <ul class="nav">
+      
+          <li class="waves-block waves-effect">
+            <a href="/"  >
+              <i class="icon icon-lg icon-home"></i>
+              主页
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/archives"  >
+              <i class="icon icon-lg icon-archives"></i>
+              archives
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/categories"  >
+              <i class="icon icon-lg icon-th-list"></i>
+              categories
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/tags"  >
+              <i class="icon icon-lg icon-tags"></i>
+              Tags
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="https://github.com/el-psy" target="_blank" >
+              <i class="icon icon-lg icon-github"></i>
+              Github
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/404"  >
+              <i class="icon icon-lg icon-link"></i>
+              测试
+            </a>
+          </li>
+      
+    </ul>
+
+    <footer class="footer">
+  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
+  <p>七翼式 &copy; 2023</p>
+  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
+  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
+</footer>
+
+  </div>
+</div>
+
+  </nav>
+  <main id="main">
+    <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">graphql-queries-mutations</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header">
+  <div class="container">
+    <h1 class="author">graphql-queries-mutations</h1>
+    <h5 class="subtitle">
+        
+            <time datetime="2022-12-15T03:42:35.000Z" itemprop="datePublished" class="page-time">
+  2022-12-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/graphql/">graphql</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/graphql/query/">query</a></li></ul></li></ul>
+
+        
+    </h5>
+  </div>
+</header>
+
+    <div class="container body-wrap">
+      <article id="post-graphql-queries-mutations" 
+  class="article article-type-post" itemprop="blogPost">
+    <div class="post-meta flex-row">
+        
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/graphql/" rel="tag">graphql</a></li></ul>
+
+    </div>
+    <div class="post-body">
+        <aside class="post-widget" id="post-widget">
+
+            
+            <nav class="post-toc-wrap" id="post-toc">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#fields-%E5%AD%97%E6%AE%B5"><span class="post-toc-number">1.</span> <span class="post-toc-text">Fields 字段</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#arguments-%E5%8F%82%E6%95%B0"><span class="post-toc-number">2.</span> <span class="post-toc-text">Arguments 参数</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#aliases-%E5%88%AB%E5%90%8D"><span class="post-toc-number">3.</span> <span class="post-toc-text">Aliases 别名</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#fragments-%E7%89%87%E6%AE%B5"><span class="post-toc-number">4.</span> <span class="post-toc-text">Fragments 片段</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#using-variables-inside-fragments-%E5%9C%A8%E7%89%87%E6%AE%B5%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8F%98%E9%87%8F"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">Using variables inside fragments 在片段中使用变量</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#operation-name-%E6%93%8D%E4%BD%9C%E5%90%8D"><span class="post-toc-number">5.</span> <span class="post-toc-text">Operation name 操作名</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#variables-%E5%8F%98%E9%87%8F"><span class="post-toc-number">6.</span> <span class="post-toc-text">Variables 变量</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#variable-definitions-%E5%8F%98%E9%87%8F%E5%AE%9A%E4%B9%89"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">Variable definitions 变量定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#default-variables-%E9%BB%98%E8%AE%A4%E5%8F%98%E9%87%8F"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">Default variables 默认变量</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#directives-%E6%8C%87%E4%BB%A4"><span class="post-toc-number">7.</span> <span class="post-toc-text">Directives 指令</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#mutations"><span class="post-toc-number">8.</span> <span class="post-toc-text">Mutations</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#multiple-fields-in-mutations-mutation%E4%B8%AD%E7%9A%84%E5%A4%9A%E4%B8%AA%E5%AD%97%E6%AE%B5"><span class="post-toc-number">8.1.</span> <span class="post-toc-text">Multiple fields in mutations Mutation中的多个字段</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#inline-fragments-%E5%86%85%E8%81%94%E7%89%87%E6%AE%B5"><span class="post-toc-number">9.</span> <span class="post-toc-text">Inline Fragments 内联片段</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#meta-fields-%E5%85%83%E5%AD%97%E6%AE%B5"><span class="post-toc-number">9.1.</span> <span class="post-toc-text">Meta fields 元字段</span></a></li></ol></li></ol>
+            </nav>
+            
+        </aside>
+
+        <div class="post-main">
+
+            <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p><a target="_blank" rel="noopener" href="https://graphql.org/learn/queries/">Queries and Mutations</a>翻译</p>
+</blockquote>
+<p>在这篇文章里，你会学到如何进行GraphQL的查询的细节。</p>
+<h1 id="fields-字段"><a class="header-anchor" href="#fields-字段">#</a>Fields 字段</h1>
+<p>简而言之，GraphQL就是查询对象上的特定字段。让我们从一个非常简单的查询以及运行它的结果开始：</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token object">hero</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"hero"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"R2-D2"</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>你可以直观发现查询和结果的结构完全相同。这对于GraphQL至关重要，因为这使得你总是得到需要的信息，并且服务端明确知道客户端的所需字段。<br>
+字段返回了一个字符串类型。本例中是《星球大战》的主要英雄的名字，“R2-D2”。</p>
+<blockquote>
+<p>哦，还有一件事——上面的查询是交互式的。这意味着你可以随心所欲地改变他，并得到新的结果。尝试向查询中的hero对象添加appearsln字段，然后查看新结果。<br>
+还是去原网页试试吧。。</p>
+</blockquote>
+<p>在上个例子中，我们只是查询了hero的name字段，但字段也可以引用对象。在这种情况下，可以为该对象进行字段的子查询。GraphQL查询可以遍历相关对象及其字段，让客户端在一个请求中获取大量相关数据，而不是像传统REST架构中那样进行多次往返。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token object">hero</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token comment"># Queries can have comments!</span>
+    <span class="token object">friends</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"hero"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"R2-D2"</span><span class="token punctuation">,</span>
+      <span class="token property">"friends"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Luke Skywalker"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Han Solo"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Leia Organa"</span>
+        <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>注意，在这个例子中，friends字段返回一个项目列表。GraphQL查询对于单个项目或项目列表都是相同的；然而，我们根据schema中所指示的内容，知道应该选择那个。</p>
+<h1 id="arguments-参数"><a class="header-anchor" href="#arguments-参数">#</a>Arguments 参数</h1>
+<p>如果我们唯一能做的就是遍历对象及其字段，GraphQL不过就是一种有非常有用的获取数据的语言。但是当它有了向字段传递参数的动能时，事情就会变得更加有趣了。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token property-query">human</span><span class="token punctuation">(</span><span class="token attr-name">id</span><span class="token punctuation">:</span> <span class="token string">"1000"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token property">height</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"human"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Luke Skywalker"</span><span class="token punctuation">,</span>
+      <span class="token property">"height"</span><span class="token operator">:</span> <span class="token number">1.72</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在REST这样的系统中，你只能传递一组参数，即请求中的查询参数和url字段。但是在GraphQL中，每个字段和嵌套对象中都可以获得自己的一套参数，使得GraphQL完全可以替代多个API请求。你甚至可以将参数传递到标量字段中，在服务端实现一次数据转换，而不是在客户端实现。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token property-query">human</span><span class="token punctuation">(</span><span class="token attr-name">id</span><span class="token punctuation">:</span> <span class="token string">"1000"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token property-query">height</span><span class="token punctuation">(</span><span class="token attr-name">unit</span><span class="token punctuation">:</span> <span class="token constant">FOOT</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"human"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Luke Skywalker"</span><span class="token punctuation">,</span>
+      <span class="token property">"height"</span><span class="token operator">:</span> <span class="token number">5.6430448</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>参数可以有许多不同的类型。在上面的示例中，我们使用了Enumeration枚举类型，它表示一组有限的选项（在本例中，长度单位为METER或FOOT）。GraphQL附带一组默认类型，但GraphQL服务端也可以声明自己的自定义类型，只要它们可以序列化为传输格式即可。</p>
+<p><a target="_blank" rel="noopener" href="https://graphql.org/learn/schema">这里阅读更多有关GraphQL类型系统</a></p>
+<h1 id="aliases-别名"><a class="header-anchor" href="#aliases-别名">#</a>Aliases 别名</h1>
+<p>如果你目光敏锐，可能已经注意到，由于结果对象字段与查询字段名称匹配，但不包含参数，因此不能直接查询具有不同参数的同一字段。这就是为什么需要别名从原因——它们允许你将字段的结果重命名为所需的任何名称。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token attr-name">empireHero</span><span class="token punctuation">:</span> <span class="token property-query">hero</span><span class="token punctuation">(</span><span class="token attr-name">episode</span><span class="token punctuation">:</span> <span class="token constant">EMPIRE</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token attr-name">jediHero</span><span class="token punctuation">:</span> <span class="token property-query">hero</span><span class="token punctuation">(</span><span class="token attr-name">episode</span><span class="token punctuation">:</span> <span class="token constant">JEDI</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"empireHero"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Luke Skywalker"</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token property">"jediHero"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"R2-D2"</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在上面的例子中，两个hero字段可能会冲突，但由于我们使用了别名，因此可以在一个请求中获得两个结果。</p>
+<h1 id="fragments-片段"><a class="header-anchor" href="#fragments-片段">#</a>Fragments 片段</h1>
+<p>假设我们的应用程序有一个比较复杂的页面，可以让我们并排查看两位hero以及他们的朋友。你可以想象，这样的查询可能很快变得复杂，因为我们至少需要重复字段一次——比较的每一侧都需要重复一次。<br>
+这就是GraphQL使用了被称为片段的可复用单元的原因。片段允许你构建字段集，然后再需要时将它们包含在查询中，下面是如何使用片段的例子：</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token attr-name">leftComparison</span><span class="token punctuation">:</span> <span class="token property-query">hero</span><span class="token punctuation">(</span><span class="token attr-name">episode</span><span class="token punctuation">:</span> <span class="token constant">EMPIRE</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token operator">...</span><span class="token fragment function">comparisonFields</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token attr-name">rightComparison</span><span class="token punctuation">:</span> <span class="token property-query">hero</span><span class="token punctuation">(</span><span class="token attr-name">episode</span><span class="token punctuation">:</span> <span class="token constant">JEDI</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token operator">...</span><span class="token fragment function">comparisonFields</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">fragment</span> <span class="token fragment function">comparisonFields</span> <span class="token keyword">on</span> <span class="token class-name">Character</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">name</span>
+  <span class="token property">appearsIn</span>
+  <span class="token object">friends</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"leftComparison"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Luke Skywalker"</span><span class="token punctuation">,</span>
+      <span class="token property">"appearsIn"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token string">"NEWHOPE"</span><span class="token punctuation">,</span>
+        <span class="token string">"EMPIRE"</span><span class="token punctuation">,</span>
+        <span class="token string">"JEDI"</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"friends"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Han Solo"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Leia Organa"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"C-3PO"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"R2-D2"</span>
+        <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token property">"rightComparison"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"R2-D2"</span><span class="token punctuation">,</span>
+      <span class="token property">"appearsIn"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token string">"NEWHOPE"</span><span class="token punctuation">,</span>
+        <span class="token string">"EMPIRE"</span><span class="token punctuation">,</span>
+        <span class="token string">"JEDI"</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"friends"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Luke Skywalker"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Han Solo"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Leia Organa"</span>
+        <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>你可以看到，如果重复这些片段，上面的查询会变得非常复杂。片段的概念通常用于将复杂的应用程序数据需求切分成更小的块，特别是当你需要将具有不同片段的大量UI组件则合成一个初始数据请求时。</p>
+<h2 id="using-variables-inside-fragments-在片段中使用变量"><a class="header-anchor" href="#using-variables-inside-fragments-在片段中使用变量">#</a>Using variables inside fragments 在片段中使用变量</h2>
+<p>片段中可以访问查询或mutation中声明的变量。参见<a target="_blank" rel="noopener" href="https://graphql.org/learn/queries/#variables">变量</a></p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token keyword">query</span> <span class="token definition-query function">HeroComparison</span><span class="token punctuation">(</span><span class="token variable">$first</span><span class="token punctuation">:</span> <span class="token scalar">Int</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token attr-name">leftComparison</span><span class="token punctuation">:</span> <span class="token property-query">hero</span><span class="token punctuation">(</span><span class="token attr-name">episode</span><span class="token punctuation">:</span> <span class="token constant">EMPIRE</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token operator">...</span><span class="token fragment function">comparisonFields</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token attr-name">rightComparison</span><span class="token punctuation">:</span> <span class="token property-query">hero</span><span class="token punctuation">(</span><span class="token attr-name">episode</span><span class="token punctuation">:</span> <span class="token constant">JEDI</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token operator">...</span><span class="token fragment function">comparisonFields</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">fragment</span> <span class="token fragment function">comparisonFields</span> <span class="token keyword">on</span> <span class="token class-name">Character</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">name</span>
+  <span class="token property-query">friendsConnection</span><span class="token punctuation">(</span><span class="token attr-name">first</span><span class="token punctuation">:</span> <span class="token variable">$first</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">totalCount</span>
+    <span class="token object">edges</span> <span class="token punctuation">&#123;</span>
+      <span class="token object">node</span> <span class="token punctuation">&#123;</span>
+        <span class="token property">name</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"leftComparison"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Luke Skywalker"</span><span class="token punctuation">,</span>
+      <span class="token property">"friendsConnection"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+        <span class="token property">"totalCount"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>
+        <span class="token property">"edges"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+          <span class="token punctuation">&#123;</span>
+            <span class="token property">"node"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Han Solo"</span>
+            <span class="token punctuation">&#125;</span>
+          <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+          <span class="token punctuation">&#123;</span>
+            <span class="token property">"node"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Leia Organa"</span>
+            <span class="token punctuation">&#125;</span>
+          <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+          <span class="token punctuation">&#123;</span>
+            <span class="token property">"node"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"C-3PO"</span>
+            <span class="token punctuation">&#125;</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">]</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token property">"rightComparison"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"R2-D2"</span><span class="token punctuation">,</span>
+      <span class="token property">"friendsConnection"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+        <span class="token property">"totalCount"</span><span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+        <span class="token property">"edges"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+          <span class="token punctuation">&#123;</span>
+            <span class="token property">"node"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Luke Skywalker"</span>
+            <span class="token punctuation">&#125;</span>
+          <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+          <span class="token punctuation">&#123;</span>
+            <span class="token property">"node"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Han Solo"</span>
+            <span class="token punctuation">&#125;</span>
+          <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+          <span class="token punctuation">&#123;</span>
+            <span class="token property">"node"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+              <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Leia Organa"</span>
+            <span class="token punctuation">&#125;</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">]</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="operation-name-操作名"><a class="header-anchor" href="#operation-name-操作名">#</a>Operation name 操作名</h1>
+<p>到目前为止，我们一直使用一种省略关键字和查询名称的缩略语法。但在实际生产应用程序中，使用关键字和查询名称语法可以减少代码的歧义。<br>
+下面是一个例子，其中包含关键字查询作为操作类型，HeroNameAndFriends作为操作名称。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token keyword">query</span> <span class="token definition-query function">HeroNameAndFriends</span> <span class="token punctuation">&#123;</span>
+  <span class="token object">hero</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token object">friends</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"hero"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"R2-D2"</span><span class="token punctuation">,</span>
+      <span class="token property">"friends"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Luke Skywalker"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Han Solo"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Leia Organa"</span>
+        <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>操作类型是查询，mutaition，以及订阅，并描述你要执行的操作类型。除非你使用查询的简略语法，操作类型是必须的。在这种情况下，你无法为操作提供名称或者变量定义。</p>
+<p>操作名称是操作的一个显式的有意义的名称。它只在多操作文档中是必须的，但我们推荐使用，因为它对于调试和服务端日志记录非常有用。当出问题（你在网络日志或者GraphQL服务日志中看到错误）时，通过操作名称找到代码中出问题的查询的位置，要比试图破解内容更容易。把它想象成你最喜欢的编程语言的一个函数名。例如，在JavaScript中，我们可以只使用匿名函数工作，但当我们为函数命名时，更容易追踪它，调试代码，并在调用时记录。同样，GraphQL查询和mutation名，以及片段名称，可以是在服务端识别不同GraphQL请求的有力的调试工具。</p>
+<h1 id="variables-变量"><a class="header-anchor" href="#variables-变量">#</a>Variables 变量</h1>
+<p>到目前为止，我们已经在查询中写入了所有参数。但在大多数应用程序中，字段的参数是动态的。例如，可能有一个下拉列表，让你选择最感兴趣的《星球大战》剧集，或者一个搜索字段，或者一组过滤器。</p>
+<p>直接在查询语句中传递这些动态参数不会是一个好主意，因为这样我们的客户端代码需要在运行时动态操作查询语句，并将其序列化为GraphQL特定格式。取而代之，GraphQL有一种一流的方式，将动态值从查询语句中分离出来，并将它们作为单独的字典传递。这些值被称为变量。</p>
+<p>当我们开始处理变量时，需要做三件事：</p>
+<ol>
+<li>用$variableName替换查询中的静态值</li>
+<li>将$variable声明为查询接受的变量之一</li>
+<li>传递variableName：单独的，适于传输的（通常是JSON）变量字典中的值。</li>
+</ol>
+<p>这是它们一起工作的例子：</p>
+<p>查询语句</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token keyword">query</span> <span class="token definition-query function">HeroNameAndFriends</span><span class="token punctuation">(</span><span class="token variable">$episode</span><span class="token punctuation">:</span> <span class="token class-name">Episode</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token property-query">hero</span><span class="token punctuation">(</span><span class="token attr-name">episode</span><span class="token punctuation">:</span> <span class="token variable">$episode</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token object">friends</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>变量值</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"episode"</span><span class="token operator">:</span> <span class="token string">"JEDI"</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>查询结果</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"hero"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"R2-D2"</span><span class="token punctuation">,</span>
+      <span class="token property">"friends"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Luke Skywalker"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Han Solo"</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Leia Organa"</span>
+        <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>现在，在我们的客户点代码中，可以简单地传送一个不同的变量，而不是需要构建一个全新的查询语句。一般来说这是一个很好的做法，可以用来表示查询中那些参数是动态的——我们不应该使用字符串插值添加用户的值来构建查询语句。</p>
+<h2 id="variable-definitions-变量定义"><a class="header-anchor" href="#variable-definitions-变量定义">#</a>Variable definitions 变量定义</h2>
+<p>变量定义是在上面的查询中看起来像（$episode: Episode）的部分。它的工作方式与类型化语言中函数参数的定义方式相同。它列出了所有变量，前缀是$，后面是它的类型，在本例中为Episode。</p>
+<p>所有声明的变量必须是标量，枚举或者输入对象类型。因此，如果你想要传递一个复杂的对象到一个字段中，需要知道服务端上匹配的输入类型。在Schema模式页面上了解更多输入对象类型的相关信息。</p>
+<p>变量定义成可以是可选的，也可以是必须的。在上面的例子中，因为在Episode类型后没有!符号，它就是可选的。但如果变量传递到在字段需要非空参数，那么也必须要传递给变量。</p>
+<p>想要进一步了解这些变量定义的语法，学习GraphQL模式语言很有用。模式语言在Schema页面有详细说明。</p>
+<h2 id="default-variables-默认变量"><a class="header-anchor" href="#default-variables-默认变量">#</a>Default variables 默认变量</h2>
+<p>在类型声明之后可以添加默认值，也可以将默认值分配给查询中的变量。</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token keyword">query</span> <span class="token definition-query function">HeroNameAndFriends</span><span class="token punctuation">(</span><span class="token variable">$episode</span><span class="token punctuation">:</span> <span class="token class-name">Episode</span> <span class="token operator">=</span> <span class="token constant">JEDI</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token property-query">hero</span><span class="token punctuation">(</span><span class="token attr-name">episode</span><span class="token punctuation">:</span> <span class="token variable">$episode</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token object">friends</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>当为所有变量提供默认值时，你可以在不传递任何变量的条件下调用查询。如果任何变量作为变量字典的一部分传递，它们将覆盖默认值。</p>
+<h1 id="directives-指令"><a class="header-anchor" href="#directives-指令">#</a>Directives 指令</h1>
+<p>我们之前讨论了如何使用变量来避免使用字符串插值的方式构建动态查询。通过在参数中传递变量解决了大部分此类问题，但我们可能还需要另一种方法来动态改变查询的结构和形状。例如，我们可以想象一个UI组件，它有一个详细的汇总视图，其中一个包含的字段多余另一个。</p>
+<p>让我们为这样的一个组件构建一个查询：</p>
+<p>查询语句:</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token keyword">query</span> <span class="token definition-query function">Hero</span><span class="token punctuation">(</span><span class="token variable">$episode</span><span class="token punctuation">:</span> <span class="token class-name">Episode</span><span class="token punctuation">,</span> <span class="token variable">$withFriends</span><span class="token punctuation">:</span> <span class="token scalar">Boolean</span><span class="token operator">!</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token property-query">hero</span><span class="token punctuation">(</span><span class="token attr-name">episode</span><span class="token punctuation">:</span> <span class="token variable">$episode</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token property">friends</span> <span class="token directive function">@include</span><span class="token punctuation">(</span><span class="token attr-name">if</span><span class="token punctuation">:</span> <span class="token variable">$withFriends</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>变量</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"episode"</span><span class="token operator">:</span> <span class="token string">"JEDI"</span><span class="token punctuation">,</span>
+  <span class="token property">"withFriends"</span><span class="token operator">:</span> <span class="token boolean">false</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>查询结果</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"hero"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"R2-D2"</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>尝试修改上面的变量，将withFriends修改为true，并查看结果如何变化(去原网页试试吧)。</p>
+<p>我们需要在GraphQL中使用一个名为指令的特性。指令可以用在字段或者片段中，并且可以以服务器希望的任何方式影响查询的执行。GraphQL核心规范仅包含两个指令，任何符合规范的GraphQL服务器都必须支持这两个指令:</p>
+<ul>
+<li>@include(if: Boolean) 仅当参数为true时，才在结果中包含此字段。</li>
+<li>@skip(if: Boolean) 如果参数为真，则跳过此字段。</li>
+</ul>
+<p>指令对于需要改变查询字段是需要进行字符串操作的情况非常有用。服务器还可以自定义全新的指令来增添实验性功能。</p>
+<h1 id="mutations"><a class="header-anchor" href="#mutations">#</a>Mutations</h1>
+<p>GraphQL大多数讨论都集中在获取数据上，但任何完整的数据平台都需要一种修改服务端数据的方案。</p>
+<p>在REST中，任何请求都可能会对服务器产生一些副作用，但按照惯例，不会使用GET请求来修改数据。GraphQL与此类似——从技术讲任何查询都可以实现数据写入。然而，我们还是构建了一个惯例，任何导致写入的操作推荐显式地发送请求。</p>
+<p>就像查询一样，如果mutation字段返回对象类型，则可以请求嵌套字段。这对于获取更新后对象的新状态非常有用。让我们看一下一个简单的mutation示例：</p>
+<p>mutation:</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token keyword">mutation</span> <span class="token definition-mutation function">CreateReviewForEpisode</span><span class="token punctuation">(</span><span class="token variable variable-input">$ep</span><span class="token punctuation">:</span> <span class="token class-name">Episode</span><span class="token operator">!</span><span class="token punctuation">,</span> <span class="token variable variable-input">$review</span><span class="token punctuation">:</span> <span class="token atom-input class-name">ReviewInput</span><span class="token operator">!</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token property-query property-mutation">createReview</span><span class="token punctuation">(</span><span class="token attr-name">episode</span><span class="token punctuation">:</span> <span class="token variable variable-input">$ep</span><span class="token punctuation">,</span> <span class="token attr-name">review</span><span class="token punctuation">:</span> <span class="token variable variable-input">$review</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">stars</span>
+    <span class="token property">commentary</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>变量</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"ep"</span><span class="token operator">:</span> <span class="token string">"JEDI"</span><span class="token punctuation">,</span>
+  <span class="token property">"review"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"stars"</span><span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span>
+    <span class="token property">"commentary"</span><span class="token operator">:</span> <span class="token string">"This is a great movie!"</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>结果</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"createReview"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"stars"</span><span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span>
+      <span class="token property">"commentary"</span><span class="token operator">:</span> <span class="token string">"This is a great movie!"</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>注意createReview字段如何返回新创建的commentary和star字段。这在mutation现有数据时十分有用。例如，当增加字段时，我们可以通过一个请求来mutation和查询字段的新值。</p>
+<p>你可能还注意到，在这个例子中，我们传递的review变量不是标量。他是一种输入对象类型，一种可以作为参数传入的特殊类型的对象类型。在Schema页面上了解有关输入类型的更多信息。</p>
+<h2 id="multiple-fields-in-mutations-mutation中的多个字段"><a class="header-anchor" href="#multiple-fields-in-mutations-mutation中的多个字段">#</a>Multiple fields in mutations Mutation中的多个字段</h2>
+<p>Mutation可以包含多个字段，就像查询一样。查询和mutation之间有一个重要差别，除了名称之外：</p>
+<blockquote>
+<p>查询字段可以并列执行，mutation字段只能一个一个地串行执行。</p>
+</blockquote>
+<p>这意味着，如果我们在一个请求中发送两个incrementCredits的mutation，第一个保证在第二个开始之前完成，从而保证我们不会与自己产生竞争冲突条件。</p>
+<h1 id="inline-fragments-内联片段"><a class="header-anchor" href="#inline-fragments-内联片段">#</a>Inline Fragments 内联片段</h1>
+<p>与其他许多类型系统一样，GraphQL Schema包括定义接口和联合类型的能力。在<a target="_blank" rel="noopener" href="https://graphql.org/learn/schema/#interfaces">模式指南</a>中了解它们。</p>
+<p>如果要查询返回接口或联合类型的字段，则需要使用内联片段来访问基础具体类型上的数据。举个例子：</p>
+<p>查询字段</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token keyword">query</span> <span class="token definition-query function">HeroForEpisode</span><span class="token punctuation">(</span><span class="token variable">$ep</span><span class="token punctuation">:</span> <span class="token class-name">Episode</span><span class="token operator">!</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token property-query">hero</span><span class="token punctuation">(</span><span class="token attr-name">episode</span><span class="token punctuation">:</span> <span class="token variable">$ep</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">name</span>
+    <span class="token operator">...</span> <span class="token keyword">on</span> <span class="token class-name">Droid</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">primaryFunction</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token operator">...</span> <span class="token keyword">on</span> <span class="token class-name">Human</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">height</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>变量</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"ep"</span><span class="token operator">:</span> <span class="token string">"JEDI"</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>结果</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"hero"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"R2-D2"</span><span class="token punctuation">,</span>
+      <span class="token property">"primaryFunction"</span><span class="token operator">:</span> <span class="token string">"Astromech"</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在这个查询中，hero字段返回类型Character，该类型可能是Human或Droid，具体取决于episode参数。在直接选择中，你只能询问Character界面上存在的字段，例如name。</p>
+<p>要请求具体类型上的字段，需要使用带有类型条件的内联片段。因为第一个片段在Droid上标记为…，所以只有当从hero返回的角色是Droid类型时，才会执行primaryFunction字段。对于Human类型的height字段也是如此。</p>
+<p>命名片段也可以以相同的方式使用。因为命名片段总是附带一个类型。</p>
+<h2 id="meta-fields-元字段"><a class="header-anchor" href="#meta-fields-元字段">#</a>Meta fields 元字段</h2>
+<p>考虑到在某些情况下，你不知道从GraphQL服务器上返回什么类型的数据，你需要一些方法确认如何在客户端上处理这些数据。GraphQL允许你请求_typename，一个元字段，以获取该点的对象类型的名称。</p>
+<p>查询</p>
+<pre class="line-numbers language-graphql" data-language="graphql"><code class="language-graphql"><span class="token punctuation">&#123;</span>
+  <span class="token property-query">search</span><span class="token punctuation">(</span><span class="token attr-name">text</span><span class="token punctuation">:</span> <span class="token string">"an"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">__typename</span>
+    <span class="token operator">...</span> <span class="token keyword">on</span> <span class="token class-name">Human</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token operator">...</span> <span class="token keyword">on</span> <span class="token class-name">Droid</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token operator">...</span> <span class="token keyword">on</span> <span class="token class-name">Starship</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">name</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>结果</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"search"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">&#123;</span>
+        <span class="token property">"__typename"</span><span class="token operator">:</span> <span class="token string">"Human"</span><span class="token punctuation">,</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Han Solo"</span>
+      <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+      <span class="token punctuation">&#123;</span>
+        <span class="token property">"__typename"</span><span class="token operator">:</span> <span class="token string">"Human"</span><span class="token punctuation">,</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Leia Organa"</span>
+      <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+      <span class="token punctuation">&#123;</span>
+        <span class="token property">"__typename"</span><span class="token operator">:</span> <span class="token string">"Starship"</span><span class="token punctuation">,</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"TIE Advanced x1"</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在上面的查询中，搜索返回一个联合类型，他可以是三个选项之一。如果没有_typename字段，就无法区分客户端的不同类型。</p>
+<p>GraphQL服务提供了几个元字段，其他的用于公开<a target="_blank" rel="noopener" href="https://graphql.org/learn/introspection/">Introspection</a>系统。</p>
+
+
+
+            </div>
+            
+<nav class="post-nav">
+  
+    <div class="waves-block waves-effect prev fl">
+      <a href="/2022/12/16/rollup-plugin/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">rollup插件</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next fr">
+      <a href="/2022/12/15/graphql-introduction/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Introduction to GraphQL翻译</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+            
+            
+        </div>
+    </div>
+</article>
+
+    </div>
+  </main>
+<div class="mask" id="mask"></div>
+<a href="#top" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<script type="text/template" id="search-tpl">
+<li class="item">
+    <a href="/{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</script>
+
+
+<script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

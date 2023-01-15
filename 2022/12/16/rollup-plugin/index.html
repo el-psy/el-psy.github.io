@@ -1,0 +1,333 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>rollup插件 | 七翼式 | 不对称</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="theme-color" content="#3F51B5">
+  
+  
+  <meta name="keywords" content="前端,rollup">
+  <meta name="description" content="rollup 插件翻译  #插件概述 一个rollup插件是一个具有一个或多个属性，构建hook和输出生成hook的对象插件应作为一个包分发，该包导出一个函数，该函数可以使用插件特定的option调用并返回这样的对象。 插件允许你自定义rollup的行为，例如，在绑定之前传输代码，或在node_modules文件夹中查找第三方模块。有关如何使用插件的示例，请查看Using plugins。 可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rollup插件">
+<meta property="og:url" content="http://localhost:5000/2022/12/16/rollup-plugin/index.html">
+<meta property="og:site_name" content="七翼式">
+<meta property="og:description" content="rollup 插件翻译  #插件概述 一个rollup插件是一个具有一个或多个属性，构建hook和输出生成hook的对象插件应作为一个包分发，该包导出一个函数，该函数可以使用插件特定的option调用并返回这样的对象。 插件允许你自定义rollup的行为，例如，在绑定之前传输代码，或在node_modules文件夹中查找第三方模块。有关如何使用插件的示例，请查看Using plugins。 可以">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-16T06:02:55.000Z">
+<meta property="article:modified_time" content="2022-12-16T07:40:06.000Z">
+<meta property="article:author" content="el_psy">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="rollup">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternative" href="/atom.xml" title="七翼式" type="application/atom+xml">
+  
+  <meta name="summary" content="">
+  <link rel="shortcut icon" href="/favicon/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head>
+
+<body>
+  <div id="loading" class="active"></div>
+
+  <nav id="menu" class="hide" >
+   <div class="inner flex-row-vertical">
+  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+      <i class="icon icon-lg icon-close"></i>
+  </a>
+  <div class="brand-wrap">
+    <div class="brand">
+      <a href="/" class="avatar"><img src="/img/logo.jpg"></a>
+      <hgroup class="introduce">
+        <h5 class="nickname">el_psy</h5>
+        <a href="mailto:gaojingjingjing@outlook.com" title="gaojingjingjing@outlook.com" class="mail">gaojingjingjing@outlook.com</a>
+      </hgroup>
+    </div>
+  </div>
+  <div class="scroll-wrap flex-col">
+    <ul class="nav">
+      
+          <li class="waves-block waves-effect">
+            <a href="/"  >
+              <i class="icon icon-lg icon-home"></i>
+              主页
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/archives"  >
+              <i class="icon icon-lg icon-archives"></i>
+              archives
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/categories"  >
+              <i class="icon icon-lg icon-th-list"></i>
+              categories
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/tags"  >
+              <i class="icon icon-lg icon-tags"></i>
+              Tags
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="https://github.com/el-psy" target="_blank" >
+              <i class="icon icon-lg icon-github"></i>
+              Github
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/404"  >
+              <i class="icon icon-lg icon-link"></i>
+              测试
+            </a>
+          </li>
+      
+    </ul>
+
+    <footer class="footer">
+  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
+  <p>七翼式 &copy; 2023</p>
+  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
+  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
+</footer>
+
+  </div>
+</div>
+
+  </nav>
+  <main id="main">
+    <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">rollup插件</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header">
+  <div class="container">
+    <h1 class="author">rollup插件</h1>
+    <h5 class="subtitle">
+        
+            <time datetime="2022-12-16T06:02:55.000Z" itemprop="datePublished" class="page-time">
+  2022-12-16
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/rollup/">rollup</a></li></ul></li></ul>
+
+        
+    </h5>
+  </div>
+</header>
+
+    <div class="container body-wrap">
+      <article id="post-rollup-plugin" 
+  class="article article-type-post" itemprop="blogPost">
+    <div class="post-meta flex-row">
+        
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rollup/" rel="tag">rollup</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
+
+    </div>
+    <div class="post-body">
+        <aside class="post-widget" id="post-widget">
+
+            
+            <nav class="post-toc-wrap" id="post-toc">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E6%8F%92%E4%BB%B6%E6%A6%82%E8%BF%B0"><span class="post-toc-number">1.</span> <span class="post-toc-text">插件概述</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="post-toc-number">2.</span> <span class="post-toc-text">简单示例</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E6%83%AF%E4%BE%8B"><span class="post-toc-number">3.</span> <span class="post-toc-text">惯例</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#properties-%E5%B1%9E%E6%80%A7"><span class="post-toc-number">4.</span> <span class="post-toc-text">Properties 属性</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#name"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">name</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#build-hooks-%E6%9E%84%E5%BB%BAhook"><span class="post-toc-number">5.</span> <span class="post-toc-text">Build Hooks 构建Hook</span></a></li></ol>
+            </nav>
+            
+        </aside>
+
+        <div class="post-main">
+
+            <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p><a target="_blank" rel="noopener" href="https://rollupjs.org/guide/en/#plugin-development">rollup 插件</a>翻译</p>
+</blockquote>
+<h1 id="插件概述"><a class="header-anchor" href="#插件概述">#</a>插件概述</h1>
+<p>一个rollup插件是一个具有一个或多个属性，构建hook和输出生成hook的对象插件应作为一个包分发，该包导出一个函数，该函数可以使用插件特定的option调用并返回这样的对象。</p>
+<p>插件允许你自定义rollup的行为，例如，在绑定之前传输代码，或在node_modules文件夹中查找第三方模块。有关如何使用插件的示例，请查看<a target="_blank" rel="noopener" href="https://rollupjs.org/guide/en/#using-plugins">Using plugins</a>。</p>
+<p>可以在<a target="_blank" rel="noopener" href="https://github.com/rollup/awesome">github.com/rollup/awesome</a>上找到一个插件列表。如果你想对插件提出建议，请提交一个PR。</p>
+<h1 id="简单示例"><a class="header-anchor" href="#简单示例">#</a>简单示例</h1>
+<p>下面的插件在不访问文件系统的情况下拦截任何虚拟模块的导入。例如，如果你想在浏览器中使用rollup，这是必要的。它甚至可以用于替换示例中所示的entry points。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// rollup-plugin-my-example.js</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">function</span> <span class="token function">myExample</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'my-example'</span><span class="token punctuation">,</span> <span class="token comment">// this name will show up in warnings and errors</span>
+    <span class="token function">resolveId</span> <span class="token punctuation">(</span> <span class="token parameter">source</span> <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>source <span class="token operator">===</span> <span class="token string">'virtual-module'</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> source<span class="token punctuation">;</span> <span class="token comment">// this signals that rollup should not ask other plugins or check the file system to find this id</span>
+      <span class="token punctuation">&#125;</span>
+      <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// other ids should be handled as usually</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token function">load</span> <span class="token punctuation">(</span> <span class="token parameter">id</span> <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>id <span class="token operator">===</span> <span class="token string">'virtual-module'</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token string">'export default "This is virtual!"'</span><span class="token punctuation">;</span> <span class="token comment">// the source code for "virtual-module"</span>
+      <span class="token punctuation">&#125;</span>
+      <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// other ids should be handled as usually</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">// rollup.config.js</span>
+<span class="token keyword">import</span> myExample <span class="token keyword">from</span> <span class="token string">'./rollup-plugin-my-example.js'</span><span class="token punctuation">;</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">input</span><span class="token operator">:</span> <span class="token string">'virtual-module'</span><span class="token punctuation">,</span> <span class="token comment">// resolved by our plugin</span>
+  <span class="token literal-property property">plugins</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token function">myExample</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">output</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">&#123;</span>
+    <span class="token literal-property property">file</span><span class="token operator">:</span> <span class="token string">'bundle.js'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">format</span><span class="token operator">:</span> <span class="token string">'es'</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">]</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="惯例"><a class="header-anchor" href="#惯例">#</a>惯例</h1>
+<ul>
+<li>插件应该有一个清晰的名字，带有rollup-plugin- 的前缀。</li>
+<li>在package.json文件中包含rollup-plugin关键字。</li>
+<li>插件应该经过测试。我们推荐<a target="_blank" rel="noopener" href="https://github.com/mochajs/mocha">mocha</a>，或者<a target="_blank" rel="noopener" href="https://github.com/avajs/ava">ava</a>，它们支持开箱即用的Promise。</li>
+<li>如果可能，请使用异步方法，例如使用fs.reafFile而不是fs.reafFileSync。</li>
+<li>使用英语书写文档。</li>
+<li>如果合适，请确认你的插件输出正确的源映射。</li>
+<li>如果你的插件使用“虚拟模块”（例如，helper函数），请在模块ID前加上\0。这将阻止其他插件尝试处理它。</li>
+</ul>
+<h1 id="properties-属性"><a class="header-anchor" href="#properties-属性">#</a>Properties 属性</h1>
+<h2 id="name"><a class="header-anchor" href="#name">#</a>name</h2>
+<p>Type: string<br>
+插件的名字，用于error和warning信息中。</p>
+<h1 id="build-hooks-构建hook"><a class="header-anchor" href="#build-hooks-构建hook">#</a>Build Hooks 构建Hook</h1>
+<p>为了与构建过程交互，插件对象需要包含hook。hook是在构建的各个阶段调用的函数。hook可以影响构建的运行，提供有关构建的信息，或者在构建完成之后进行修改。这有不同种类的hook：</p>
+<ul>
+<li>async：这种hook可以返回一个Promise，解析为相同类型的值；否则，这个hook应该标记为sync。</li>
+<li>first：如果几个插件都实现了这个hook，hook将按顺序执行，直到hook返回null或undefined以外的值。</li>
+<li>sequential：如果几个插件实现了这个hook，那么这些插件都将按照指定的插件顺序执行。如果其中一个hook是异步的，那么这种类型的后续hook将等待当前hook执行完毕。</li>
+<li>parallel：如果有几个插件实现了这个hook，那么这些插件都将按照执行的插件顺序执行。如果一个hook是异步的，那么这种类型的后续hook将并行执行，而不是等待当前hook。</li>
+</ul>
+<p>hook不仅可以是对象，也可以是函数。在这种情况下，必须将实际的hook函数（或者banner/footer/intro/outro的值）指定为处理程序。这允许你提供更改hook执行的其他可选属性。</p>
+<ul>
+<li>order: “pre” | “post” | null</li>
+</ul>
+<p>如果有几个插件实现了这个hook，要么先运行这个插件(‘pre’)，要么最后运行(‘post’)，或者在用户执行的顺序运行(没有值或者为null)</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">function</span> <span class="token function">resolveFirst</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'resolve-first'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">resolveId</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token literal-property property">order</span><span class="token operator">:</span> <span class="token string">'pre'</span><span class="token punctuation">,</span>
+      <span class="token function">handler</span><span class="token punctuation">(</span><span class="token parameter">source</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>source <span class="token operator">===</span> <span class="token string">'external'</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+          <span class="token keyword">return</span> <span class="token punctuation">&#123;</span> <span class="token literal-property property">id</span><span class="token operator">:</span> source<span class="token punctuation">,</span> <span class="token literal-property property">external</span><span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如果几个插件都使用了‘pre’或’post’，rollup将按照用户指定的顺序运行它们。此选项可用于所有插件hook。对于并行hook，它会更改hook的同步部分的运行顺序。</p>
+<ul>
+<li>sequential: boolean</li>
+</ul>
+
+
+
+            </div>
+            
+<nav class="post-nav">
+  
+    <div class="waves-block waves-effect prev fl">
+      <a href="/2023/01/09/graphql-schemas-types/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">graphql-schemas-types</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next fr">
+      <a href="/2022/12/15/graphql-queries-mutations/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">graphql-queries-mutations</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+            
+            
+        </div>
+    </div>
+</article>
+
+    </div>
+  </main>
+<div class="mask" id="mask"></div>
+<a href="#top" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<script type="text/template" id="search-tpl">
+<li class="item">
+    <a href="/{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</script>
+
+
+<script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
